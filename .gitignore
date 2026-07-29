@@ -1,0 +1,11 @@
+# Dependencies and generated builds
+node_modules/
+dist/
+
+# Local environment values and credentials
+.env
+.env.*
+!.env.example
+
+# Runtime uploads from the local development server
+public/uploads/

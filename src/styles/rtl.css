@@ -1,0 +1,28 @@
+.portfolio-site[dir="rtl"] {
+  font-family: "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif;
+}
+
+.portfolio-site[dir="rtl"] [data-name="Header"] .text-left,
+.portfolio-site[dir="rtl"] [data-name="Section - About"] [class*="items-start"],
+.portfolio-site[dir="rtl"] [data-name="CTA"] .items-start {
+  text-align: right;
+}
+
+.portfolio-site[dir="rtl"] [data-name="CTA"] .items-start {
+  align-items: flex-start;
+}
+
+.portfolio-site[dir="rtl"] [data-name="CTA"] .group-hover\:translate-x-0\.5 {
+  --tw-translate-x: -0.125rem;
+}
+
+@media (max-width: 639px) {
+  .portfolio-site[dir="rtl"] [data-name="Header"] .fixed.right-0 {
+    right: auto;
+    left: 0;
+  }
+
+  .portfolio-site[dir="rtl"] [data-name="Header"] .translate-x-full {
+    --tw-translate-x: -100%;
+  }
+}

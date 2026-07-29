@@ -1,0 +1,89 @@
+@media (hover: hover) and (pointer: fine) {
+  .portfolio-site button,
+  .portfolio-site a {
+    transition:
+      transform 180ms cubic-bezier(0.22, 1, 0.36, 1),
+      color 180ms ease,
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .portfolio-site button:hover,
+  .portfolio-site [data-name="Main_CTA"]:hover,
+  .portfolio-site [data-name="CTA"] a:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(27, 125, 211, 0.18), inset 0 1px 0 rgba(204, 234, 255, 0.1);
+  }
+
+  .portfolio-site [data-name="Main_CTA"]:hover {
+    border-color: rgba(125, 190, 255, 0.8);
+    background-color: rgba(56, 118, 252, 0.3);
+  }
+
+  .portfolio-site [data-name="navtab"]:hover p {
+    color: #8ec9ff;
+  }
+
+  .portfolio-site [data-name="CTA"] a:hover {
+    border-color: rgba(126, 194, 255, 0.72);
+  }
+
+  .portfolio-site button:active,
+  .portfolio-site [data-name="Main_CTA"]:active,
+  .portfolio-site [data-name="CTA"] a:active {
+    transform: translateY(0) scale(0.98);
+    box-shadow: none;
+  }
+}
+
+.portfolio-site :is(button, a):focus-visible {
+  outline: 2px solid #7abaff;
+  outline-offset: 3px;
+}
+
+.portfolio-site .service-card {
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 220ms ease,
+    background-color 220ms ease,
+    box-shadow 220ms ease;
+}
+
+.portfolio-site .service-card-arrow {
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), color 220ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .portfolio-site .service-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(123, 186, 255, 0.66);
+    background-color: rgba(18, 45, 76, 0.82);
+    box-shadow: 0 16px 32px rgba(1, 10, 23, 0.24);
+  }
+
+  .portfolio-site .service-card:hover .service-card-arrow {
+    transform: translate3d(3px, -3px, 0);
+    color: #d9ecff;
+  }
+}
+
+.portfolio-site[dir="rtl"] .service-card-arrow {
+  right: auto;
+  left: 1.5rem;
+  transform: scaleX(-1);
+}
+
+@media (min-width: 640px) {
+  .portfolio-site[dir="rtl"] .service-card-arrow {
+    right: auto;
+    left: 1.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-site .service-card,
+  .portfolio-site .service-card-arrow {
+    transition: none;
+  }
+}

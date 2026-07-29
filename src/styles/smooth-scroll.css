@@ -1,0 +1,17 @@
+html {
+  scroll-behavior: smooth;
+}
+
+#home,
+#projects,
+#about,
+#services,
+#contact {
+  scroll-margin-top: 1.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

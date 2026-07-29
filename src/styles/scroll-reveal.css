@@ -1,0 +1,65 @@
+:root {
+  --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+  transition:
+    opacity 700ms var(--reveal-ease) var(--reveal-delay, 0ms),
+    transform 700ms var(--reveal-ease) var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal[data-reveal-variant="hero"] {
+  transform: translate3d(0, 24px, 0);
+  transition-duration: 800ms;
+}
+
+.scroll-reveal.is-revealed {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.scroll-reveal [data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translate3d(0, 20px, 0);
+}
+
+.scroll-reveal.is-revealed [data-reveal-stagger] > * {
+  animation: scroll-reveal-item 700ms var(--reveal-ease) both;
+}
+
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(1) { animation-delay: 0ms; }
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(2) { animation-delay: 100ms; }
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(3) { animation-delay: 200ms; }
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(4) { animation-delay: 300ms; }
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(5) { animation-delay: 400ms; }
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(6) { animation-delay: 500ms; }
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(7) { animation-delay: 600ms; }
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(8) { animation-delay: 700ms; }
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(9) { animation-delay: 800ms; }
+.scroll-reveal.is-revealed [data-reveal-stagger] > :nth-child(10) { animation-delay: 900ms; }
+
+@keyframes scroll-reveal-item {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 20px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .scroll-reveal[data-reveal-variant="hero"],
+  .scroll-reveal [data-reveal-stagger] > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+    animation: none;
+  }
+}

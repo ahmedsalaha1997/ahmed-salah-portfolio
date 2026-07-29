@@ -1,0 +1,51 @@
+.spaceship-cursor,
+.spaceship-cursor * {
+  pointer-events: none;
+}
+
+.spaceship-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+}
+
+.spaceship-cursor-ship,
+.spaceship-cursor-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.spaceship-cursor-ship {
+  width: 36px;
+  transform-origin: 50% 50%;
+  transition: opacity 160ms ease;
+}
+
+.spaceship-cursor-ship svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translate(-18px, -18px);
+  filter: drop-shadow(0 0 7px rgba(88, 172, 255, 0.48));
+}
+
+.spaceship-cursor-trail {
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(186, 225, 255, 0.45) 0%, rgba(93, 176, 255, 0.2) 34%, rgba(35, 117, 203, 0) 72%);
+  filter: blur(1px);
+}
+
+.spaceship-cursor-active,
+.spaceship-cursor-active * {
+  cursor: none !important;
+}
+
+@media (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .spaceship-cursor { display: none; }
+}

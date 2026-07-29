@@ -1,0 +1,240 @@
+{
+  "hero": {
+    "title": "I Design Products That",
+    "words": [
+      "Impact.",
+      "Scale.",
+      "Perform.",
+      "Deliver.",
+      "Convert.",
+      "Grow."
+    ],
+    "subtitle": "Product and design engineer crafting scalable systems and experiences for complex workflows.",
+    "profileImage": "",
+    "cvLink": "#",
+    "primaryCtaLabel": "Ahmed's CV",
+    "primaryCtaLink": "#",
+    "secondaryCtaLabel": "See work",
+    "secondaryCtaLink": "#projects"
+  },
+  "navigation": [
+    {
+      "id": "home",
+      "label": "Home",
+      "link": "#home"
+    },
+    {
+      "id": "projects",
+      "label": "Projects",
+      "link": "#projects"
+    },
+    {
+      "id": "about",
+      "label": "About",
+      "link": "#about"
+    },
+    {
+      "id": "services",
+      "label": "Services",
+      "link": "#services"
+    },
+    {
+      "id": "contact",
+      "label": "Contact",
+      "link": "#contact"
+    },
+    {
+      "id": "arabic",
+      "label": "Arabic",
+      "link": "#"
+    }
+  ],
+  "projects": [
+    {
+      "id": "legus",
+      "title": "Legus — The Ultimate Product for Managing Law Offices",
+      "coverImage": "",
+      "galleryImages": [],
+      "description": "Legal practice management dashboard.",
+      "tags": [
+        "Product Design",
+        "Web App",
+        "Dashboard",
+        "UI/UX",
+        "SaaS"
+      ],
+      "year": "2025",
+      "category": "Product Design",
+      "link": "#"
+    },
+    {
+      "id": "wasl",
+      "title": "Wasl — App for the Saudi Real Estate Market",
+      "coverImage": "",
+      "galleryImages": [],
+      "description": "Real estate marketplace mobile experience.",
+      "tags": [
+        "Product Design",
+        "Mobile App",
+        "Dashboard",
+        "UI/UX",
+        "2025"
+      ],
+      "year": "2025",
+      "category": "Product Design",
+      "link": "#"
+    },
+    {
+      "id": "kba",
+      "title": "Official Mobile App for the Kuwait Bar Association",
+      "coverImage": "",
+      "galleryImages": [],
+      "description": "Member services mobile application.",
+      "tags": [
+        "Product Design",
+        "Mobile App",
+        "Dashboard",
+        "UI/UX",
+        "2025"
+      ],
+      "year": "2025",
+      "category": "Product Design",
+      "link": "#"
+    },
+    {
+      "id": "vit-john",
+      "title": "AI-Powered Dog Health Assistant Mobile App",
+      "coverImage": "",
+      "galleryImages": [],
+      "description": "AI health assistance for dog owners.",
+      "tags": [
+        "Product Design",
+        "B2C",
+        "Mobile App",
+        "UI/UX",
+        "2025"
+      ],
+      "year": "2025",
+      "category": "Product Design",
+      "link": "#"
+    },
+    {
+      "id": "atqan",
+      "title": "Atqan — HR Management System",
+      "coverImage": "",
+      "galleryImages": [],
+      "description": "Human resources management system.",
+      "tags": [
+        "Product Design",
+        "B2B",
+        "Dashboard",
+        "UI/UX",
+        "2025"
+      ],
+      "year": "2025",
+      "category": "Product Design",
+      "link": "#"
+    },
+    {
+      "id": "performs",
+      "title": "Performs for Maximizing Athletic Potential",
+      "coverImage": "",
+      "galleryImages": [],
+      "description": "Sports performance management platform.",
+      "tags": [
+        "Product Design",
+        "B2B",
+        "Dashboard",
+        "UI/UX",
+        "2022"
+      ],
+      "year": "2022",
+      "category": "Product Design",
+      "link": "#"
+    }
+  ],
+  "about": {
+    "profileImage": "",
+    "name": "Ahmed Salah",
+    "bio": "Senior Product Designer (UI UX) with 4+ years of experience designing SaaS platforms across FinTech, LegalTech, and Property Management. Experienced in leading end-to-end product design from discovery and UX research to scalable design systems, prototypes, and developer handoff.",
+    "socialLinks": {
+      "behance": "https://www.behance.net/ahmedsalaha1997",
+      "linkedin": "https://www.linkedin.com/in/ahmedsalah1997/",
+      "whatsapp": "https://wa.me/201015949764"
+    }
+  },
+  "experience": [
+    {
+      "id": "creative-fintech",
+      "logo": "",
+      "jobTitle": "SENIOR PRODUCT DESIGNER (UI UX)",
+      "company": "Creative Financial technology",
+      "dates": "Jan 2023 - Present",
+      "employmentType": "Full time",
+      "location": "Kuwait",
+      "bulletPoints": [
+        "Led end-to-end UX/UI design for enterprise SaaS products.",
+        "Translated complex requirements into scalable user flows."
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "id": "ux-google",
+      "logo": "",
+      "title": "User Experience Design Certificate",
+      "issuer": "Google",
+      "credentialUrl": "#"
+    }
+  ],
+  "education": [
+    {
+      "id": "qena",
+      "logo": "",
+      "degree": "Engineering Bachelor Degree.",
+      "institutionName": "Qena University"
+    }
+  ],
+  "skills": [
+    {
+      "id": "product-design",
+      "name": "Product Design",
+      "icon": "Layers"
+    },
+    {
+      "id": "research",
+      "name": "User Research",
+      "icon": "Search"
+    },
+    {
+      "id": "figma",
+      "name": "Figma",
+      "icon": "Figma"
+    }
+  ],
+  "languages": [
+    {
+      "id": "arabic",
+      "name": "Arabic",
+      "proficiency": "Native or bilingual proficiency"
+    },
+    {
+      "id": "english",
+      "name": "English",
+      "proficiency": "Professional working proficiency"
+    }
+  ],
+  "contact": {
+    "heading": "Let's create something amazing together.",
+    "description": "Have a product challenge, idea, or opportunity? I'd love to hear about it.",
+    "email": "ahmedsalaha1997@gmail.com",
+    "whatsAppNumber": "+20 101 594 9764",
+    "whatsAppLink": "https://wa.me/201015949764",
+    "linkedInUrl": "https://www.linkedin.com/in/ahmedsalah1997/",
+    "behanceUrl": "https://www.behance.net/ahmedsalaha1997/projects"
+  },
+  "footer": {
+    "copyright": "© 2026 Ahmed Salah. All Rights Reserved.",
+    "logo": ""
+  }
+}
