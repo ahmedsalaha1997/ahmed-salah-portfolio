@@ -12,6 +12,7 @@ type Project = {
   title: string;
   tags: string[];
   images: string[];
+  link?: string;
 };
 
 const defaultProjects: Project[] = [
@@ -64,12 +65,14 @@ function ProjectImage({ images, title }: Pick<Project, "images" | "title">) {
 
 function ProjectCard({ project }: { project: Project }) {
   const { language } = useLanguage();
+  const href = project.link?.trim();
+  const hasLink = Boolean(href && href !== "#");
   const localizedProject = {
     ...project,
     title: translateText(project.title, language),
     tags: project.tags.map((tag) => translateText(tag, language)),
   };
-  return (
+  const card = (
     <article className="group flex min-w-0 flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-3 shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#6d9ee8]/50 hover:bg-white/[0.09] sm:p-4">
       <ProjectImage {...localizedProject} />
       <div className="flex flex-1 flex-col gap-4 px-1 pb-1 sm:gap-5">
@@ -89,6 +92,18 @@ function ProjectCard({ project }: { project: Project }) {
       </div>
     </article>
   );
+
+  return hasLink ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noreferrer"
+      aria-label={`Open ${localizedProject.title} in a new tab`}
+      className="block rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#6d9ee8]"
+    >
+      {card}
+    </a>
+  ) : card;
 }
 
 export default function Work() {
@@ -98,7 +113,7 @@ export default function Work() {
     ? managedProjects.map((project, index) => {
       const fallback = defaultProjects[index] || defaultProjects[0];
       const images = [project.coverImage, ...project.galleryImages].filter(Boolean);
-      return { title: project.title, tags: project.tags, images: images.length ? images : fallback.images };
+      return { title: project.title, tags: project.tags, images: images.length ? images : fallback.images, link: project.link };
     })
     : defaultProjects;
   return (
