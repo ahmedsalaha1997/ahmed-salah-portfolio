@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { contentService } from "../lib/content-service";
-import { type PortfolioContent } from "../lib/portfolio-content";
+import { type PortfolioContent, type PortfolioContentBase } from "../lib/portfolio-content";
 import { localizeContent, type SiteLanguage } from "./LanguageProvider";
 
 type SectionKey = "hero" | "navigation" | "projects" | "about" | "experience" | "certifications" | "education" | "skills" | "languages" | "contact" | "footer";
@@ -42,6 +42,17 @@ const emptyItems: Record<string, Omit<Item, "id">> = {
 function clone<T>(value: T): T { return structuredClone(value); }
 function makeId() { return `item-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`; }
 function isChanged<T>(a: T, b: T) { return JSON.stringify(a) !== JSON.stringify(b); }
+function cleanList(values: string[]) { return values.map((value) => value.trim()).filter(Boolean); }
+function cleanContentForSave(content: PortfolioContent): PortfolioContent {
+  const cleanBase = (base: PortfolioContentBase): PortfolioContentBase => ({
+    ...base,
+    hero: { ...base.hero, words: cleanList(base.hero.words) },
+    projects: base.projects.map((project) => ({ ...project, galleryImages: cleanList(project.galleryImages), tags: cleanList(project.tags) })),
+    experience: base.experience.map((item) => ({ ...item, bulletPoints: cleanList(item.bulletPoints) })),
+  });
+  const cleaned = cleanBase(content);
+  return { ...cleaned, ...(content.arabic ? { arabic: cleanBase(content.arabic) } : {}) };
+}
 
 function FieldLabel({ children }: { children: string }) {
   return <label className="mb-1.5 block text-xs font-medium text-[#b8c9d8]">{children}</label>;
@@ -94,7 +105,7 @@ function CollectionEditor({ title, items, fields, token, onChange }: { title: st
     {items.length === 0 && <div className="rounded-xl border border-dashed border-[#38526d] p-8 text-center text-sm text-[#8da3b8]">No items yet. Add the first one.</div>}
     {items.map((item, index) => <article key={item.id} draggable onDragStart={() => setDragIndex(index)} onDragOver={(event) => event.preventDefault()} onDrop={() => { if (dragIndex !== null) move(dragIndex, index); setDragIndex(null); }} className="rounded-2xl border border-[#29445f] bg-[#091a2b] p-4 shadow-[0_12px_30px_rgba(0,0,0,0.12)]">
       <div className="mb-4 flex items-center justify-between gap-3 border-b border-white/10 pb-3"><div className="flex items-center gap-2 text-sm font-semibold text-white"><GripVertical size={17} className="cursor-grab text-[#7d9bb4]" />{String(item.title || item.jobTitle || item.name || item.label || item.degree || "Item")}</div><div className="flex gap-1"><button type="button" disabled={index === 0} onClick={() => move(index, index - 1)} className="rounded-md p-1.5 text-[#b7c9d9] hover:bg-white/10 disabled:opacity-30" aria-label="Move up"><ChevronUp size={16} /></button><button type="button" disabled={index === items.length - 1} onClick={() => move(index, index + 1)} className="rounded-md p-1.5 text-[#b7c9d9] hover:bg-white/10 disabled:opacity-30" aria-label="Move down"><ChevronDown size={16} /></button><button type="button" onClick={() => remove(index)} className="rounded-md p-1.5 text-red-200 hover:bg-red-400/10" aria-label="Delete"><Trash2 size={16} /></button></div></div>
-      <div className="grid gap-4 md:grid-cols-2">{fields.map((field) => <div key={field.key} className={field.type === "textarea" || field.type === "list" || field.type === "image" ? "md:col-span-2" : ""}>{field.type === "image" ? <ImageField label={field.label} value={String(item[field.key] || "")} token={token} onChange={(value) => update(index, field.key, value)} /> : <TextField label={field.label} value={Array.isArray(item[field.key]) ? (item[field.key] as string[]).join("\n") : String(item[field.key] || "")} multiline={field.type === "textarea" || field.type === "list"} onChange={(value) => update(index, field.key, field.type === "list" ? value.split("\n").map((entry) => entry.trim()).filter(Boolean) : value)} />}</div>)}</div>
+      <div className="grid gap-4 md:grid-cols-2">{fields.map((field) => <div key={field.key} className={field.type === "textarea" || field.type === "list" || field.type === "image" ? "md:col-span-2" : ""}>{field.type === "image" ? <ImageField label={field.label} value={String(item[field.key] || "")} token={token} onChange={(value) => update(index, field.key, value)} /> : <TextField label={field.label} value={Array.isArray(item[field.key]) ? (item[field.key] as string[]).join("\n") : String(item[field.key] || "")} multiline={field.type === "textarea" || field.type === "list"} onChange={(value) => update(index, field.key, field.type === "list" ? value.split("\n").map((entry) => entry.trim()) : value)} />}</div>)}</div>
     </article>)}
   </div>;
 }
@@ -128,7 +139,7 @@ export default function AdminDashboard() {
   const setRoot = <K extends keyof PortfolioContent>(key: K, value: PortfolioContent[K]) => setEditing({ ...editing, [key]: value });
   const updateObject = (key: "hero" | "about" | "contact" | "footer", field: string, value: string | string[]) => setRoot(key, { ...(editing[key] as object), [field]: value } as PortfolioContent[typeof key]);
   const choose = (key: SectionKey) => { if (!dirty || window.confirm("You have unsaved changes. Continue without saving?")) { setActive(key); setMenuOpen(false); } };
-  const save = async () => { setSaving(true); try { const result = await contentService.save(draft, token); setSaved(clone(result.content)); setDraft(clone(result.content)); toast.success("Content saved successfully."); } catch (error) { toast.error(error instanceof Error ? error.message : "Save failed."); } finally { setSaving(false); } };
+  const save = async () => { setSaving(true); try { const result = await contentService.save(cleanContentForSave(draft), token); setSaved(clone(result.content)); setDraft(clone(result.content)); toast.success("Content saved successfully."); } catch (error) { toast.error(error instanceof Error ? error.message : "Save failed."); } finally { setSaving(false); } };
   const reset = () => { if (dirty && window.confirm("Reset all unsaved changes on this page?")) setDraft(clone(saved)); };
   const logout = async () => { if (dirty && !window.confirm("You have unsaved changes. Log out anyway?")) return; await contentService.logout(token).catch(() => undefined); sessionStorage.removeItem("portfolio-admin-token"); setToken(""); };
   const body = (() => {
