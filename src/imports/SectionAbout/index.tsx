@@ -8,7 +8,7 @@ import imgJDaeJ9U6LnOqhLgIBihZrkhEYsJpg from "./18ff227b5bdeb96d8ccd048bde3964ce
 import imgJDaeJ9U6LnOqhLgIBihZrkhEYsJpg1 from "./3aeb5e796d3acab6e1e203824db4176b0b2525f5.png";
 import imgTcmcvcy80LrTrZmZl8AlQopVoJpg from "./a4a5dab1e24738b90f03216cdace1741bbae7271.png";
 import imgImage4 from "./fccb3d2eeddcf428794a3798cb7f1c9f9393e5d0.png";
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import ScrollReveal from "../../app/ScrollReveal";
 import { usePortfolioContent } from "../../app/ContentProvider";
 import { useStaticTextTranslation } from "../../app/useStaticTextTranslation";
@@ -77,11 +77,17 @@ function Behance() {
   );
 }
 
-function Whatsapp1() {
+function SocialLink({ href, label, children }: { href: string; label: string; children: ReactNode }) {
   return (
-    <div className="bg-[rgba(6,6,6,0.67)] content-stretch flex items-center justify-center overflow-clip relative rounded-[77px] shrink-0 size-[36px]" data-name="whatsapp 4">
-      <Behance />
-    </div>
+    <a
+      aria-label={label}
+      className="bg-[rgba(6,6,6,0.67)] content-stretch flex items-center justify-center overflow-clip relative rounded-[77px] shrink-0 size-[36px] transition-colors hover:bg-[rgba(20,100,180,0.9)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      href={href}
+      rel="noreferrer"
+      target="_blank"
+    >
+      {children}
+    </a>
   );
 }
 
@@ -105,58 +111,21 @@ function Linkedin() {
   );
 }
 
-function Whatsapp2() {
-  return (
-    <div className="bg-[rgba(6,6,6,0.67)] content-stretch flex items-center justify-center overflow-clip relative rounded-[77px] shrink-0 size-[36px]" data-name="whatsapp 5">
-      <Linkedin />
-    </div>
-  );
-}
-
-function Group2() {
-  return (
-    <div className="col-1 h-[20px] ml-0 mt-0 relative row-1 w-[19.904px]" data-name="Group">
-      <svg className="absolute block inset-0 size-full" fill="none" height="20" preserveAspectRatio="none" viewBox="0 0 19.9042 20" width="19.9042">
-        <g id="Group">
-          <path clipRule="evenodd" d={svgPaths.p273d2170} fill="var(--fill-0, white)" fillRule="evenodd" id="Vector" />
-        </g>
-      </svg>
-    </div>
-  );
-}
-
-function WaLogo() {
-  return (
-    <div className="grid-cols-[max-content] grid-rows-[max-content] inline-grid leading-[0] place-items-start relative shrink-0" data-name="WA_Logo">
-      <Group2 />
-    </div>
-  );
-}
-
-function Whatsapp() {
-  return (
-    <div className="bg-[rgba(6,6,6,0.67)] content-stretch flex items-center justify-center overflow-clip relative rounded-[77px] shrink-0 size-[36px]" data-name="whatsapp 1">
-      <WaLogo />
-    </div>
-  );
-}
-
-function Frame() {
+function Frame({ socialLinks }: { socialLinks: { behance: string; linkedin: string } }) {
   return (
     <div className="absolute bottom-[9.42px] content-stretch flex gap-[5px] items-center right-[9px]">
-      <Whatsapp1 />
-      <Whatsapp2 />
-      <Whatsapp />
+      <SocialLink href={socialLinks.behance} label="Open Behance profile"><Behance /></SocialLink>
+      <SocialLink href={socialLinks.linkedin} label="Open LinkedIn profile"><Linkedin /></SocialLink>
     </div>
   );
 }
 
-function ImagePlaceholder({ src }: { src?: string }) {
+function ImagePlaceholder({ src, socialLinks }: { src?: string; socialLinks: { behance: string; linkedin: string } }) {
   return (
     <div className="relative rounded-[18px] shrink-0 w-full max-w-[336px]" data-name="Image_placeholder">
       <div className="content-stretch flex flex-col gap-[24.667px] items-center justify-center overflow-clip relative rounded-[inherit] size-full">
         <Image src={src} />
-        <Frame />
+        <Frame socialLinks={socialLinks} />
       </div>
       <div aria-hidden className="absolute border border-black border-solid inset-0 pointer-events-none rounded-[18px]" />
     </div>
@@ -184,10 +153,10 @@ function Content({ name, bio }: { name: string; bio: string }) {
   );
 }
 
-function Intro({ profileImage, name, bio }: { profileImage?: string; name: string; bio: string }) {
+function Intro({ profileImage, name, bio, socialLinks }: { profileImage?: string; name: string; bio: string; socialLinks: { behance: string; linkedin: string } }) {
   return (
     <div className="content-stretch flex flex-col sm:flex-row gap-[16px] items-center sm:items-start justify-center max-w-[1040px] relative shrink-0 w-full" data-name="Intro">
-      <ImagePlaceholder src={profileImage} />
+      <ImagePlaceholder socialLinks={socialLinks} src={profileImage} />
       <Content name={name} bio={bio} />
     </div>
   );
@@ -2250,10 +2219,10 @@ function SectionLanguages() {
   );
 }
 
-function Container({ about }: { about: { profileImage: string; name: string; bio: string } }) {
+function Container({ about }: { about: { profileImage: string; name: string; bio: string; socialLinks: { behance: string; linkedin: string } } }) {
   return (
     <div className="content-stretch flex flex-col gap-[48px] items-center justify-center relative shrink-0 w-full max-w-[1040px]" data-name="Container">
-      <ScrollReveal className="w-full"><Intro profileImage={about.profileImage} name={about.name} bio={about.bio} /></ScrollReveal>
+      <ScrollReveal className="w-full"><Intro profileImage={about.profileImage} name={about.name} bio={about.bio} socialLinks={about.socialLinks} /></ScrollReveal>
       <ScrollReveal className="w-full"><Experience /></ScrollReveal>
       <ScrollReveal className="w-full"><Licences /></ScrollReveal>
       <ScrollReveal className="w-full"><Education /></ScrollReveal>
