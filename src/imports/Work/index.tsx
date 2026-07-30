@@ -64,7 +64,7 @@ function ProjectImage({ images, title }: Pick<Project, "images" | "title">) {
 }
 
 function getProjectHref(link?: string) {
-  const value = link?.trim();
+  const value = link?.trim().replace(/^#(?=(?:https?:\/\/|www\.))/i, "");
   if (!value || value === "#") return undefined;
   if (/^(https?:|mailto:|tel:)/i.test(value)) return value;
   return `https://${value.replace(/^\/+/, "")}`;
