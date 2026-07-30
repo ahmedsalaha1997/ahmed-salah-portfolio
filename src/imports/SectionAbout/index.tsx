@@ -9,9 +9,11 @@ import imgJDaeJ9U6LnOqhLgIBihZrkhEYsJpg1 from "./3aeb5e796d3acab6e1e203824db4176
 import imgTcmcvcy80LrTrZmZl8AlQopVoJpg from "./a4a5dab1e24738b90f03216cdace1741bbae7271.png";
 import imgImage4 from "./fccb3d2eeddcf428794a3798cb7f1c9f9393e5d0.png";
 import { useRef, type ReactNode } from "react";
+import { Atom, ClipboardCheck, CloudCog, Figma, ImageIcon, PanelTop, PanelsTopLeft, Search, UserCog, UsersRound, type LucideIcon } from "lucide-react";
 import ScrollReveal from "../../app/ScrollReveal";
 import { usePortfolioContent } from "../../app/ContentProvider";
 import { useStaticTextTranslation } from "../../app/useStaticTextTranslation";
+import type { PortfolioContent } from "../../lib/portfolio-content";
 
 function Heading() {
   return (
@@ -2219,27 +2221,99 @@ function SectionLanguages() {
   );
 }
 
-function Container({ about }: { about: { profileImage: string; name: string; bio: string; socialLinks: { behance: string; linkedin: string } } }) {
+const fallbackLogos: Record<string, string> = {
+  "creative-financial": imgImagePlacehholder,
+  itqan: imgIdPjS93Tvror4Y9KDbe0Q6KKaQJpg,
+  "cutting-edge": imgIdPjS93Tvror4Y9KDbe0Q6KKaQJpg1,
+  "google-ux": imgJDaeJ9U6LnOqhLgIBihZrkhEYsJpg,
+  "edraak-research": imgJDaeJ9U6LnOqhLgIBihZrkhEYsJpg1,
+  "edraak-ux": imgJDaeJ9U6LnOqhLgIBihZrkhEYsJpg1,
+  "qena-university": imgImage4,
+};
+
+const skillIcons: Record<string, LucideIcon> = {
+  PanelsTopLeft, UsersRound, CloudCog, Atom, Search, PanelTop, ClipboardCheck, Figma, UserCog,
+};
+
+function CmsLogo({ src, id, label }: { src: string; id: string; label: string }) {
+  const logo = src || fallbackLogos[id];
+  return <div className="grid size-16 shrink-0 place-items-center overflow-hidden rounded-[12px] border border-black/60 bg-white/5">
+    {logo ? <img src={logo} alt={`${label} logo`} className="size-full object-cover" /> : <ImageIcon aria-hidden size={24} className="text-[#9ab8d3]" />}
+  </div>;
+}
+
+function CmsExperience({ items }: { items: PortfolioContent["experience"] }) {
+  return <div className="content-stretch flex flex-col gap-[32.01px] items-center justify-center max-w-[1040px] min-w-0 relative w-full" data-name="Experience">
+    <Header1 />
+    <div className="content-stretch flex flex-col gap-[32px] items-start relative shrink-0 w-full" data-name="CONTAINER" data-reveal-stagger>
+      {items.map((item) => <div key={item.id} className="content-stretch flex flex-col sm:flex-row gap-[16px] sm:gap-[24px] items-start justify-center relative shrink-0 w-full" data-name="Company_experiance_3">
+        <CmsLogo src={item.logo} id={item.id} label={item.company} />
+        <div className="content-stretch flex flex-col gap-[12px] items-center justify-center relative shrink-0 w-full min-w-0" data-name="Container">
+          <div className="content-stretch flex flex-col gap-[4px] items-center justify-center relative shrink-0 w-full" data-name="Container">
+            <div className="content-stretch flex flex-col items-start relative shrink-0 w-full" data-name="company_name"><p className="font-medium text-[20px] leading-[26px] text-white">{item.jobTitle}</p></div>
+            <div className="content-stretch flex flex-wrap gap-[6px] items-center relative shrink-0 w-full text-[18px] leading-[27px] text-[#a6b2b9]" data-name="container">
+              {[item.company, item.dates, item.employmentType, item.location].filter(Boolean).map((detail, index) => <span key={`${item.id}-${detail}`} className="inline-flex items-center gap-[6px]">{index > 0 && <span aria-hidden>|</span>}{detail}</span>)}
+            </div>
+          </div>
+          <ul className="w-full list-disc space-y-0 text-[18px] leading-[32px] text-[#cdd6db]">{item.bulletPoints.map((point, index) => <li key={`${item.id}-${index}`} className="ms-[27px]">{point}</li>)}</ul>
+        </div>
+      </div>)}
+    </div>
+  </div>;
+}
+
+function CmsCertifications({ items }: { items: PortfolioContent["certifications"] }) {
+  return <div className="content-stretch flex flex-col gap-[32px] items-center justify-center max-w-[1040px] min-w-0 relative w-full" data-name="Licences" data-reveal-stagger>
+    <Header2 />
+    {items.map((item) => <div key={item.id} className="content-stretch flex gap-[24px] items-center justify-center relative shrink-0 w-full" data-name="Variant 1">
+      <CmsLogo src={item.logo} id={item.id} label={item.issuer} />
+      <div className="min-w-0 flex-1"><p className="text-[20px] font-medium leading-[26px] text-white">{item.title}</p><div className="mt-1 flex flex-wrap gap-x-2 gap-y-1 text-[18px] leading-[27px] text-[#786f77]"><span>{item.issuer}</span>{item.credentialUrl && <><span aria-hidden>•</span><a href={item.credentialUrl} target="_blank" rel="noreferrer" className="hover:text-[#bfe7ff] focus-visible:outline focus-visible:outline-2">See Credential</a></>}</div></div>
+    </div>)}
+  </div>;
+}
+
+function CmsEducation({ items }: { items: PortfolioContent["education"] }) {
+  return <div className="content-stretch flex flex-col gap-[32px] items-center justify-center max-w-[1040px] min-w-0 relative shrink-0 w-full" data-name="Education">
+    <Header6 />
+    {items.map((item) => <div key={item.id} className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-full" data-name="Company"><div className="content-stretch flex gap-[24px] items-center justify-center relative shrink-0 w-full" data-name="Variant 1"><CmsLogo src={item.logo} id={item.id} label={item.institutionName} /><div className="min-w-0 flex-1"><p className="text-[20px] font-medium leading-[26px] text-white">{item.institutionName}</p><p className="text-[18px] leading-[27px] text-[#b8b8b8]">{item.degree}</p></div></div><div className="h-px w-full bg-[rgba(48,48,48,0.7)]" /></div>)}
+  </div>;
+}
+
+function CmsSkills({ items }: { items: PortfolioContent["skills"] }) {
+  return <div className="content-stretch flex flex-col gap-[32.01px] items-center justify-center max-w-[1040px] overflow-clip relative shrink-0 w-full" data-name="Skills">
+    <Header8 />
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5 lg:gap-y-[8px] relative shrink-0 w-full" data-name="Container" data-reveal-stagger>
+      {items.map((item) => { const Icon = skillIcons[item.icon] || PanelsTopLeft; return <div key={item.id} className="bg-[rgba(255,255,255,0)] content-stretch flex flex-col gap-[16px] h-[200px] items-center py-[51px] relative rounded-[12px] shrink-0 w-full" data-name="Skill card"><div aria-hidden className="absolute border border-[#c9dfff] border-solid inset-0 pointer-events-none rounded-[12px]" /><div className="overflow-clip relative shrink-0 size-[42px]"><Icon aria-hidden className="size-full text-[#bfe7ff]" strokeWidth={1.5} /></div><p className="text-center text-[18px] leading-[27px] text-white">{item.name}</p></div>; })}
+    </div>
+  </div>;
+}
+
+function CmsLanguages({ items }: { items: PortfolioContent["languages"] }) {
+  return <div className="content-stretch flex flex-col gap-[32px] items-start max-w-[1040px] relative shrink-0 w-full" data-name="Section - Languages"><ExperienceHeading /><div className="content-stretch flex flex-col sm:flex-row gap-[32px] sm:gap-[64px] items-start sm:items-center overflow-clip relative shrink-0 w-full">{items.map((item) => <div key={item.id} className="min-w-[min(100%,262px)]"><p className="text-[20px] font-medium leading-[26px] text-white">{item.name}</p><p className="mt-1 text-[18px] leading-[27px] text-[#cdd6db]">{item.proficiency}</p></div>)}</div></div>;
+}
+
+function Container({ about, content }: { about: { profileImage: string; name: string; bio: string; socialLinks: { behance: string; linkedin: string } }; content: PortfolioContent }) {
   return (
     <div className="content-stretch flex flex-col gap-[48px] items-center justify-center relative shrink-0 w-full max-w-[1040px]" data-name="Container">
       <ScrollReveal className="w-full"><Intro profileImage={about.profileImage} name={about.name} bio={about.bio} socialLinks={about.socialLinks} /></ScrollReveal>
-      <ScrollReveal className="w-full"><Experience /></ScrollReveal>
-      <ScrollReveal className="w-full"><Licences /></ScrollReveal>
-      <ScrollReveal className="w-full"><Education /></ScrollReveal>
-      <ScrollReveal className="w-full"><Skills /></ScrollReveal>
-      <ScrollReveal className="w-full"><SectionLanguages /></ScrollReveal>
+      <ScrollReveal className="w-full"><CmsExperience items={content.experience} /></ScrollReveal>
+      <ScrollReveal className="w-full"><CmsCertifications items={content.certifications} /></ScrollReveal>
+      <ScrollReveal className="w-full"><CmsEducation items={content.education} /></ScrollReveal>
+      <ScrollReveal className="w-full"><CmsSkills items={content.skills} /></ScrollReveal>
+      <ScrollReveal className="w-full"><CmsLanguages items={content.languages} /></ScrollReveal>
     </div>
   );
 }
 
 export default function SectionAbout() {
-  const { about } = usePortfolioContent();
+  const content = usePortfolioContent();
+  const { about } = content;
   const sectionRef = useRef<HTMLDivElement>(null);
   useStaticTextTranslation(sectionRef);
   return (
     <div ref={sectionRef} className="content-stretch flex flex-col gap-[40px] items-center justify-center px-5 sm:px-8 lg:px-10 xl:px-0 py-[40px] relative w-full" data-name="Section - About">
       <ScrollReveal className="w-full max-w-[1040px]"><Header /></ScrollReveal>
-      <Container about={about} />
+      <Container about={about} content={content} />
       <style>{`
         [data-name='Section - About'] [data-name='Skill card'] {
           width: 100%;

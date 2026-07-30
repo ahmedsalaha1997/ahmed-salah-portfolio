@@ -5,7 +5,7 @@ import {
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { contentService } from "../lib/content-service";
-import { type PortfolioContent, type PortfolioContentBase } from "../lib/portfolio-content";
+import { mergePortfolioContent, type PortfolioContent, type PortfolioContentBase } from "../lib/portfolio-content";
 import { localizeContent, type SiteLanguage } from "./LanguageProvider";
 
 type SectionKey = "hero" | "navigation" | "projects" | "about" | "experience" | "certifications" | "education" | "skills" | "languages" | "contact" | "footer";
@@ -122,12 +122,13 @@ export default function AdminDashboard() {
   const [saved, setSaved] = useState<PortfolioContent | null>(null); const [draft, setDraft] = useState<PortfolioContent | null>(null);
   const [active, setActive] = useState<SectionKey>("hero"); const [loading, setLoading] = useState(Boolean(token)); const [menuOpen, setMenuOpen] = useState(false); const [saving, setSaving] = useState(false);
   const [contentLanguage, setContentLanguage] = useState<SiteLanguage>("en");
-  const dirty = Boolean(saved && draft && isChanged(saved, draft));
-  useEffect(() => { if (!token) return; setLoading(true); contentService.getAdmin(token).then((content) => { setSaved(clone(content)); setDraft(clone(content)); }).catch((error) => { sessionStorage.removeItem("portfolio-admin-token"); setToken(""); toast.error(error instanceof Error ? error.message : "Session expired."); }).finally(() => setLoading(false)); }, [token]);
+  const [needsWebsiteSync, setNeedsWebsiteSync] = useState(false);
+  const dirty = Boolean(saved && draft && isChanged(saved, draft)) || needsWebsiteSync;
+  useEffect(() => { if (!token) return; setLoading(true); contentService.getAdmin(token).then((content) => { setSaved(clone(content)); setDraft(clone(content)); setNeedsWebsiteSync(!content.syncState?.websiteContentSyncedAt); }).catch((error) => { sessionStorage.removeItem("portfolio-admin-token"); setToken(""); toast.error(error instanceof Error ? error.message : "Session expired."); }).finally(() => setLoading(false)); }, [token]);
   useEffect(() => { const warn = (event: BeforeUnloadEvent) => { if (dirty) { event.preventDefault(); event.returnValue = ""; } }; window.addEventListener("beforeunload", warn); return () => window.removeEventListener("beforeunload", warn); }, [dirty]);
   if (!token) return <Login onLogin={setToken} />;
   if (loading || !draft || !saved) return <main className="grid min-h-screen place-items-center bg-[#061424] text-[#cde7ff]"><LoaderCircle className="animate-spin" /></main>;
-  const editing = contentLanguage === "ar" ? (draft.arabic ? { ...draft, ...draft.arabic } : localizeContent(draft, "ar")) : draft;
+  const editing = contentLanguage === "ar" ? (draft.arabic ? localizeContent(mergePortfolioContent(draft.arabic), "ar") : localizeContent(draft, "ar")) : draft;
   const setEditing = (next: PortfolioContent) => {
     if (contentLanguage === "ar") {
       const { arabic: _ignored, ...arabicContent } = next;
@@ -139,7 +140,7 @@ export default function AdminDashboard() {
   const setRoot = <K extends keyof PortfolioContent>(key: K, value: PortfolioContent[K]) => setEditing({ ...editing, [key]: value });
   const updateObject = (key: "hero" | "about" | "contact" | "footer", field: string, value: string | string[]) => setRoot(key, { ...(editing[key] as object), [field]: value } as PortfolioContent[typeof key]);
   const choose = (key: SectionKey) => { if (!dirty || window.confirm("You have unsaved changes. Continue without saving?")) { setActive(key); setMenuOpen(false); } };
-  const save = async () => { setSaving(true); try { const result = await contentService.save(cleanContentForSave(draft), token); setSaved(clone(result.content)); setDraft(clone(result.content)); toast.success("Content saved successfully."); } catch (error) { toast.error(error instanceof Error ? error.message : "Save failed."); } finally { setSaving(false); } };
+  const save = async () => { const isFirstSync = needsWebsiteSync; setSaving(true); try { const next = cleanContentForSave({ ...draft, syncState: { ...draft.syncState, websiteContentSyncedAt: draft.syncState?.websiteContentSyncedAt || new Date().toISOString() } }); const result = await contentService.save(next, token); setSaved(clone(result.content)); setDraft(clone(result.content)); setNeedsWebsiteSync(false); toast.success(isFirstSync ? "Website content synced to the dashboard." : "Content saved successfully."); } catch (error) { toast.error(error instanceof Error ? error.message : "Save failed."); } finally { setSaving(false); } };
   const reset = () => { if (dirty && window.confirm("Reset all unsaved changes on this page?")) setDraft(clone(saved)); };
   const logout = async () => { if (dirty && !window.confirm("You have unsaved changes. Log out anyway?")) return; await contentService.logout(token).catch(() => undefined); sessionStorage.removeItem("portfolio-admin-token"); setToken(""); };
   const body = (() => {
