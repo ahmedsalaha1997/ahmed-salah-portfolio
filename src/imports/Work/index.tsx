@@ -63,10 +63,16 @@ function ProjectImage({ images, title }: Pick<Project, "images" | "title">) {
   );
 }
 
+function getProjectHref(link?: string) {
+  const value = link?.trim();
+  if (!value || value === "#") return undefined;
+  if (/^(https?:|mailto:|tel:)/i.test(value)) return value;
+  return `https://${value.replace(/^\/+/, "")}`;
+}
+
 function ProjectCard({ project }: { project: Project }) {
   const { language } = useLanguage();
-  const href = project.link?.trim();
-  const hasLink = Boolean(href && href !== "#");
+  const href = getProjectHref(project.link);
   const localizedProject = {
     ...project,
     title: translateText(project.title, language),
@@ -93,7 +99,7 @@ function ProjectCard({ project }: { project: Project }) {
     </article>
   );
 
-  return hasLink ? (
+  return href ? (
     <a
       href={href}
       target="_blank"
