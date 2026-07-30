@@ -1,5 +1,4 @@
 import svgPaths from "./svg-2fu0ngp5kp";
-import imgSxnNfBGfA5OVxVphe3QmKs9Ysb8Png from "./6377906a4a3186e254326b5282c98eb265ff8025.png";
 import imgWhatsAppImage20241220At143509045B96251 from "./ee07f7cbea960eb061d0000fd9be93c397a9ad95.png";
 import imgImagePlacehholder from "./dc670446200b784e82daa72d6315d61336053dd4.png";
 import imgIdPjS93Tvror4Y9KDbe0Q6KKaQJpg from "./f576cb3f6f76393ff49778ef0ce5c8837a2725cd.png";
@@ -33,25 +32,14 @@ function Header() {
   );
 }
 
-function SxnNfBGfA5OVxVphe3QmKs9Ysb8Png({ src }: { src?: string }) {
-  return (
-    <div className="absolute inset-0 overflow-clip rounded-[12.333px]" data-name="sxnNfBGfA5oVxVphe3QmKS9Ysb8.png">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-[12.333px]">
-        <img alt="" className="absolute left-0 max-w-none size-full top-0" src={imgSxnNfBGfA5OVxVphe3QmKs9Ysb8Png} />
-      </div>
-      <div className="absolute left-[0.5px] size-[334px] top-[-0.42px]" data-name="WhatsApp Image 2024-12-20 at 14.35.09_045b9625 1">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <img alt="" className="absolute h-[133.33%] left-0 max-w-none top-0 w-full" src={src || imgWhatsAppImage20241220At143509045B96251} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function Image({ src }: { src?: string }) {
   return (
-    <div className="aspect-square relative rounded-[12.333px] shrink-0 w-full max-w-[333px]" data-name="Image">
-      <SxnNfBGfA5OVxVphe3QmKs9Ysb8Png src={src} />
+    <div className="aspect-square relative shrink-0 w-full max-w-[333px]" data-name="Image">
+      <img
+        alt="Ahmed Salah"
+        className="absolute inset-0 size-full rounded-[12.333px] object-cover"
+        src={src || imgWhatsAppImage20241220At143509045B96251}
+      />
     </div>
   );
 }
