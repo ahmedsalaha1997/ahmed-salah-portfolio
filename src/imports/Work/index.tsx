@@ -123,7 +123,7 @@ export default function Work() {
     })
     : defaultProjects;
   return (
-    <section id="projects" className="mx-auto flex w-full max-w-[1240px] flex-col gap-6 px-5 py-12 sm:gap-8 sm:px-8 sm:py-16 lg:px-10 xl:px-0" data-name="work">
+    <section id="projects" className="mx-auto flex w-full max-w-[1042px] flex-col gap-6 px-5 py-12 sm:gap-8 sm:px-8 sm:py-16 lg:px-10 xl:px-0" data-name="work">
       <div className="flex flex-col items-center gap-3 text-center">
         <span className="rounded-full border border-white/10 bg-white/[0.06] px-3 py-1.5 font-['IBM_Plex_Sans',sans-serif] text-xs font-medium tracking-wide text-[#cdd6db]">
           {translateText("Ahmed's Portfolio", language)}
