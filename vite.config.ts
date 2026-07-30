@@ -31,6 +31,8 @@ export default defineConfig({
     },
   },
   server: {
+    port: 5175,
+    strictPort: true,
     proxy: {
       '/api': {
         target: process.env.CONTENT_API_URL || 'http://127.0.0.1:8787',
