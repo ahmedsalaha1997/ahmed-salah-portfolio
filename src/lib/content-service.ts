@@ -27,7 +27,7 @@ export const contentService = {
     try {
       const response = await fetch("/api/content", { cache: "no-store" });
       const rows = await response.json().catch(() => []);
-      if (response.ok && Array.isArray(rows)) {
+      if (response.ok && Array.isArray(rows) && typeof rows[0]?.content === "object") {
         return mergePortfolioContent((rows[0]?.content || {}) as Partial<PortfolioContent>);
       }
     } catch {
