@@ -53,10 +53,14 @@ function Logo() {
 }
 
 function Navtabs({ items, onLanguageToggle }: { items: Array<{ id: string; label: string; link: string }>; onLanguageToggle: () => void }) {
+  const resolveLink = (item: { id: string; link: string }) => {
+    if (item.id === "resources") return "/resources";
+    return item.link.startsWith("#") && window.location.pathname !== "/" ? `/${item.link}` : item.link || "#";
+  };
   return (
     <div className="content-stretch flex gap-[24px] h-[21px] items-center relative shrink-0" data-name="navtabs">
       {items.map((item, index) => (
-        <a className="content-stretch flex items-center justify-center relative shrink-0" data-name="navtab" href={item.link || "#"} key={item.id} onClick={(event) => { if (item.id === "arabic") { event.preventDefault(); onLanguageToggle(); } }}>
+        <a className="content-stretch flex items-center justify-center relative shrink-0" data-name="navtab" href={resolveLink(item)} key={item.id} onClick={(event) => { if (item.id === "arabic") { event.preventDefault(); onLanguageToggle(); } }}>
           <p className={`[word-break:break-word] font-['IBM_Plex_Sans:Regular',sans-serif] ${index === 0 ? "font-bold text-[#0a70ae]" : "font-normal text-[#cdd6db]"} leading-[normal] relative shrink-0 text-[20px] whitespace-nowrap`} style={{ fontVariationSettings: '"wdth" 100' }}>
             {item.label}
           </p>
@@ -93,6 +97,10 @@ export default function Header() {
       ? [...navigationWithServices, resourcesItem]
       : [...navigationWithServices.slice(0, contactIndex), resourcesItem, ...navigationWithServices.slice(contactIndex)];
   })();
+  const resolveMobileLink = (item: { id: string; link: string }) => {
+    if (item.id === "resources") return "/resources";
+    return item.link.startsWith("#") && window.location.pathname !== "/" ? `/${item.link}` : item.link || "#";
+  };
 
   return (
     <div className="relative w-full" data-name="Header">
@@ -133,7 +141,7 @@ export default function Header() {
         <nav className="flex flex-col mt-2">
           {navigationWithSections.map((item, i) => (
             <a
-              href={item.link || "#"}
+              href={resolveMobileLink(item)}
               key={item.id}
               className={`text-left px-6 py-4 text-[18px] font-['IBM_Plex_Sans',sans-serif] border-b border-white/10 last:border-0 transition-colors ${
                 i === 0 ? "text-[#0a70ae] font-bold" : "text-[#cdd6db] font-normal"

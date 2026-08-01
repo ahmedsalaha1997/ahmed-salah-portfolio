@@ -55,7 +55,7 @@ export const defaultPortfolioContent: PortfolioContent = {
     profileImage: "", cvLink: "#", primaryCtaLabel: "Ahmed's CV", primaryCtaLink: "#", secondaryCtaLabel: "See work", secondaryCtaLink: "#projects",
   },
   navigation: [
-    { id: "home", label: "Home", link: "#home" }, { id: "projects", label: "Projects", link: "#projects" }, { id: "about", label: "About", link: "#about" }, { id: "services", label: "Services", link: "#services" }, { id: "resources", label: "Resources", link: "#resources" }, { id: "contact", label: "Contact", link: "#contact" }, { id: "arabic", label: "Arabic", link: "#" },
+    { id: "home", label: "Home", link: "#home" }, { id: "projects", label: "Projects", link: "#projects" }, { id: "about", label: "About", link: "#about" }, { id: "services", label: "Services", link: "#services" }, { id: "resources", label: "Resources", link: "/resources" }, { id: "contact", label: "Contact", link: "#contact" }, { id: "arabic", label: "Arabic", link: "#" },
   ],
   projects: [],
   about: { profileImage: "", name: "Ahmed Salah", bio: "Senior Product Designer (UI UX) with 4+ years of experience designing SaaS platforms across FinTech, LegalTech, and Property Management. Experienced in leading end-to-end product design from discovery and UX research to scalable design systems, prototypes, and developer handoff.", socialLinks: { behance: "https://www.behance.net/ahmedsalaha1997", linkedin: "https://www.linkedin.com/in/ahmedsalah1997/", whatsapp: "https://wa.me/201015949764" } },
@@ -73,11 +73,11 @@ export const defaultPortfolioContent: PortfolioContent = {
 export function mergePortfolioContent(value: Partial<PortfolioContent>): PortfolioContent {
   const useBaseline = <T,>(items: T[] | undefined, baseline: T[]) => items && items.length > 0 ? items : baseline;
   const sourceNavigation = value.navigation || defaultPortfolioContent.navigation;
-  const navigation = sourceNavigation.some((item) => item.id === "resources")
+  const navigationWithResources = sourceNavigation.some((item) => item.id === "resources")
     ? sourceNavigation
     : (() => {
       const contactIndex = sourceNavigation.findIndex((item) => item.id === "contact");
-      const resourcesItem = { id: "resources", label: "Resources", link: "#resources" };
+      const resourcesItem = { id: "resources", label: "Resources", link: "/resources" };
       return contactIndex === -1
         ? [...sourceNavigation, resourcesItem]
         : [...sourceNavigation.slice(0, contactIndex), resourcesItem, ...sourceNavigation.slice(contactIndex)];
@@ -85,7 +85,7 @@ export function mergePortfolioContent(value: Partial<PortfolioContent>): Portfol
   return {
     ...defaultPortfolioContent,
     ...value,
-    navigation,
+    navigation: navigationWithResources.map((item) => item.id === "resources" ? { ...item, link: "/resources" } : item),
     hero: { ...defaultPortfolioContent.hero, ...value.hero },
     about: { ...defaultPortfolioContent.about, ...value.about, socialLinks: { ...defaultPortfolioContent.about.socialLinks, ...value.about?.socialLinks } },
     contact: { ...defaultPortfolioContent.contact, ...value.contact },

@@ -10,7 +10,6 @@ import ScrollReveal from "./ScrollReveal";
 import SpaceshipCursor from "./SpaceshipCursor";
 import { useLanguage } from "./LanguageProvider";
 import ServicesSection from "./ServicesSection";
-import ResourcesSection from "./ResourcesSection";
 
 export default function App() {
   const { isArabic } = useLanguage();
@@ -48,10 +47,6 @@ export default function App() {
 
         <ScrollReveal className="w-full">
         <ServicesSection />
-        </ScrollReveal>
-
-        <ScrollReveal className="w-full">
-        <ResourcesSection />
         </ScrollReveal>
 
         <ScrollReveal className="w-full">

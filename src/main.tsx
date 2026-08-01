@@ -1,6 +1,7 @@
 
   import { createRoot } from "react-dom/client";
   import App from "./app/App.tsx";
+  import ResourcesPage from "./app/ResourcesPage.tsx";
   import AdminDashboard from "./app/AdminDashboard.tsx";
   import { ContentProvider } from "./app/ContentProvider.tsx";
   import { LanguageProvider } from "./app/LanguageProvider.tsx";
@@ -11,8 +12,9 @@
   if (favicon) favicon.href = tabIcon;
 
   const isAdminRoute = window.location.pathname === "/admin" || window.location.pathname.startsWith("/admin/");
+  const isResourcesRoute = window.location.pathname === "/resources" || window.location.pathname.startsWith("/resources/");
 
   createRoot(document.getElementById("root")!).render(
-    isAdminRoute ? <AdminDashboard /> : <LanguageProvider><ContentProvider><App /></ContentProvider></LanguageProvider>,
+    isAdminRoute ? <AdminDashboard /> : <LanguageProvider><ContentProvider>{isResourcesRoute ? <ResourcesPage /> : <App />}</ContentProvider></LanguageProvider>,
   );
   
