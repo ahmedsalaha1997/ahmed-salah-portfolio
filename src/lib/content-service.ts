@@ -22,13 +22,20 @@ export const contentService = {
   getPublic: async () => {
     if (!supabase) return mergePortfolioContent(await request<Partial<PortfolioContent>>("/content"));
 
-    // Keep public portfolio content fresh after an admin save, without relying on a cached client request.
+    // A same-origin endpoint prevents browser-side caching or cross-origin policies
+    // from delaying public updates saved through the admin dashboard.
+    try {
+      const response = await fetch("/api/content", { cache: "no-store" });
+      const rows = await response.json().catch(() => []);
+      if (response.ok && Array.isArray(rows)) {
+        return mergePortfolioContent((rows[0]?.content || {}) as Partial<PortfolioContent>);
+      }
+    } catch {
+      // Continue with the direct public Supabase request as a graceful fallback.
+    }
+
     const response = await fetch(`${supabaseUrl}/rest/v1/portfolio_content?id=eq.primary&select=content`, {
-      headers: {
-        apikey: supabaseAnonKey!,
-        Authorization: `Bearer ${supabaseAnonKey!}`,
-        Accept: "application/json",
-      },
+      headers: { apikey: supabaseAnonKey!, Authorization: `Bearer ${supabaseAnonKey!}`, Accept: "application/json" },
       cache: "no-store",
     });
     const rows = await response.json().catch(() => []);
