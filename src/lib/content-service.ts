@@ -1,5 +1,5 @@
 import { mergePortfolioContent, type PortfolioContent } from "./portfolio-content";
-import { supabase, supabaseEnabled } from "./supabase";
+import { supabase, supabaseAnonKey, supabaseEnabled, supabaseUrl } from "./supabase";
 
 const api = import.meta.env.VITE_CONTENT_API_URL
   || (window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
@@ -21,9 +21,19 @@ export const contentService = {
 
   getPublic: async () => {
     if (!supabase) return mergePortfolioContent(await request<Partial<PortfolioContent>>("/content"));
-    const { data, error } = await supabase.from("portfolio_content").select("content").eq("id", "primary").maybeSingle();
-    if (error) throw error;
-    return mergePortfolioContent((data?.content || {}) as Partial<PortfolioContent>);
+
+    // Keep public portfolio content fresh after an admin save, without relying on a cached client request.
+    const response = await fetch(`${supabaseUrl}/rest/v1/portfolio_content?id=eq.primary&select=content`, {
+      headers: {
+        apikey: supabaseAnonKey!,
+        Authorization: `Bearer ${supabaseAnonKey!}`,
+        Accept: "application/json",
+      },
+      cache: "no-store",
+    });
+    const rows = await response.json().catch(() => []);
+    if (!response.ok) throw new Error("Unable to load the latest portfolio content.");
+    return mergePortfolioContent(((rows as Array<{ content?: Partial<PortfolioContent> }>)[0]?.content || {}));
   },
 
   login: async (password: string, email?: string) => {
