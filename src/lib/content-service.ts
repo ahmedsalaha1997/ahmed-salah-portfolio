@@ -76,10 +76,17 @@ export const contentService = {
 
   upload: async (dataUrl: string, token: string) => {
     if (!supabase) return request<{ url: string }>("/admin/upload", { method: "POST", body: JSON.stringify({ dataUrl }) }, token);
-    const match = dataUrl.match(/^data:(image\/(?:png|jpeg|webp|gif));base64,(.+)$/);
-    if (!match) throw new Error("Upload a PNG, JPEG, WebP, or GIF image.");
+    const match = dataUrl.match(/^data:([^;]+);base64,(.+)$/);
+    const extensions: Record<string, string> = {
+      "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif",
+      "application/pdf": "pdf", "application/zip": "zip", "application/x-zip-compressed": "zip", "text/plain": "txt",
+      "application/msword": "doc", "application/vnd.openxmlformats-officedocument.wordprocessingml.document": "docx",
+      "application/vnd.ms-powerpoint": "ppt", "application/vnd.openxmlformats-officedocument.presentationml.presentation": "pptx",
+      "application/vnd.ms-excel": "xls", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": "xlsx",
+    };
+    if (!match || !extensions[match[1]]) throw new Error("This file type is not supported.");
     const bytes = Uint8Array.from(atob(match[2]), (character) => character.charCodeAt(0));
-    const extension = match[1].split("/")[1] === "jpeg" ? "jpg" : match[1].split("/")[1];
+    const extension = extensions[match[1]];
     const path = `portfolio/${crypto.randomUUID()}.${extension}`;
     const { error } = await supabase.storage.from("portfolio-images").upload(path, bytes, { contentType: match[1], upsert: false });
     if (error) throw error;

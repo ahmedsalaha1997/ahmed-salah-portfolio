@@ -12,6 +12,20 @@ type LanguageContextValue = {
 
 const LanguageContext = createContext<LanguageContextValue | null>(null);
 
+const resourceArabicText: Record<string, string> = {
+  "Resources": "الموارد",
+  "Explore resources": "استكشف الموارد",
+  "Resources to help you build with clarity.": "موارد تساعدك على بناء منتجات أوضح.",
+  "Useful templates, practical reading, and product tools made to support your next move.": "قوالب مفيدة، ومحتوى عملي، وأدوات منتجات تدعم خطوتك التالية.",
+  "Download": "تحميل", "Article": "مقال", "Product": "منتج", "Open resource": "فتح المورد", "Coming soon": "قريبًا",
+  "Product discovery checklist": "قائمة اكتشاف المنتج",
+  "A practical checklist to help you frame the problem, align the team, and begin discovery with confidence.": "قائمة عملية تساعدك على تحديد المشكلة، ومواءمة الفريق، وبدء مرحلة الاكتشاف بثقة.",
+  "Design systems in practice": "أنظمة التصميم في التطبيق",
+  "A concise guide to creating scalable foundations, reusable components, and clearer product experiences.": "دليل مختصر لبناء أسس قابلة للتوسع، ومكونات قابلة لإعادة الاستخدام، وتجارب منتجات أوضح.",
+  "Product thinking toolkit": "مجموعة أدوات التفكير بالمنتج",
+  "A collection of prompts and frameworks for moving from an early idea to a focused product direction.": "مجموعة من الأسئلة والأطر العملية للانتقال من فكرة مبكرة إلى اتجاه منتج واضح.",
+};
+
 const arabicText: Record<string, string> = {
   "Home": "الرئيسية", "Projects": "المشاريع", "About": "نبذة عني", "Services": "الخدمات", "Contact": "تواصل معي", "Arabic": "العربية", "English": "الإنجليزية", "Menu": "القائمة",
   "I Design Products That": "أصمم منتجات تُحدث", "Impact.": "أثرًا.", "Scale.": "تتوسع.", "Perform.": "تؤدي بكفاءة.", "Deliver.": "تنجز.", "Convert.": "تحوّل.", "Grow.": "تنمو.",
@@ -36,7 +50,7 @@ const arabicText: Record<string, string> = {
 export function translateText(value: string, language: SiteLanguage) {
   if (language !== "ar") return value;
   const normalized = value.replace(/\s+/g, " ").trim();
-  return arabicText[normalized] ?? arabicText[value] ?? value;
+  return resourceArabicText[normalized] ?? resourceArabicText[value] ?? arabicText[normalized] ?? arabicText[value] ?? value;
 }
 
 export function localizeContent(content: PortfolioContent, language: SiteLanguage): PortfolioContent {
@@ -53,6 +67,7 @@ export function localizeContent(content: PortfolioContent, language: SiteLanguag
     education: content.education.map((item) => ({ ...item, degree: translate(item.degree), institutionName: translate(item.institutionName) })),
     skills: content.skills.map((item) => ({ ...item, name: translate(item.name) })),
     languages: content.languages.map((item) => ({ ...item, name: translate(item.name), proficiency: translate(item.proficiency) })),
+    resources: content.resources.map((item) => ({ ...item, title: translate(item.title), description: translate(item.description), type: translate(item.type) })),
     contact: { ...content.contact, heading: translate(content.contact.heading), description: translate(content.contact.description) },
     footer: { ...content.footer, copyright: translate(content.footer.copyright) },
   };

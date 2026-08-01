@@ -71,12 +71,27 @@ export default function Header() {
   const { navigation } = usePortfolioContent();
   const { isArabic, toggleLanguage } = useLanguage();
   const navigationWithServices = (() => {
-    if (navigation.some((item) => item.id === "services")) return navigation;
+    if (navigation.some((item) => item.id === "services")) {
+      if (navigation.some((item) => item.id === "resources")) return navigation;
+      const contactIndex = navigation.findIndex((item) => item.id === "contact");
+      const resourcesItem = { id: "resources", label: isArabic ? "الموارد" : "Resources", link: "#resources" };
+      return contactIndex === -1
+        ? [...navigation, resourcesItem]
+        : [...navigation.slice(0, contactIndex), resourcesItem, ...navigation.slice(contactIndex)];
+    }
     const servicesItem = { id: "services", label: isArabic ? "الخدمات" : "Services", link: "#services" };
     const contactIndex = navigation.findIndex((item) => item.id === "contact");
     return contactIndex === -1
       ? [...navigation, servicesItem]
       : [...navigation.slice(0, contactIndex), servicesItem, ...navigation.slice(contactIndex)];
+  })();
+  const navigationWithSections = (() => {
+    if (navigationWithServices.some((item) => item.id === "resources")) return navigationWithServices;
+    const contactIndex = navigationWithServices.findIndex((item) => item.id === "contact");
+    const resourcesItem = { id: "resources", label: isArabic ? "الموارد" : "Resources", link: "#resources" };
+    return contactIndex === -1
+      ? [...navigationWithServices, resourcesItem]
+      : [...navigationWithServices.slice(0, contactIndex), resourcesItem, ...navigationWithServices.slice(contactIndex)];
   })();
 
   return (
@@ -84,7 +99,7 @@ export default function Header() {
       <div className="bg-[rgba(255,255,255,0)] flex items-center justify-between px-4 sm:px-12 md:px-[200px] py-[16px] w-full">
         <Logo />
         <div className="hidden lg:block">
-          <Navtabs items={navigationWithServices} onLanguageToggle={toggleLanguage} />
+          <Navtabs items={navigationWithSections} onLanguageToggle={toggleLanguage} />
         </div>
         <button
           className="lg:hidden text-white p-2"
@@ -116,7 +131,7 @@ export default function Header() {
           </button>
         </div>
         <nav className="flex flex-col mt-2">
-          {navigationWithServices.map((item, i) => (
+          {navigationWithSections.map((item, i) => (
             <a
               href={item.link || "#"}
               key={item.id}

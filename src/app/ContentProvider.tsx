@@ -45,7 +45,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
   const localizedContent = useMemo(() => localizeContent(content, language), [content, language]);
   const publicContent = useMemo(() => {
-    if (language === "ar" && content.arabic) return { ...content, ...content.arabic };
+    if (language === "ar" && content.arabic) return localizeContent({ ...content, ...content.arabic }, language);
     return localizedContent;
   }, [content, language, localizedContent]);
   return <PortfolioContentContext.Provider value={publicContent}>{children}</PortfolioContentContext.Provider>;

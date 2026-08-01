@@ -10,6 +10,7 @@ export type PortfolioContentBase = {
   education: Array<{ id: string; logo: string; degree: string; institutionName: string }>;
   skills: Array<{ id: string; name: string; icon: string }>;
   languages: Array<{ id: string; name: string; proficiency: string }>;
+  resources: Array<{ id: string; title: string; description: string; type: string; coverImage: string; link: string }>;
   contact: { heading: string; description: string; email: string; whatsAppNumber: string; whatsAppLink: string; linkedInUrl: string; behanceUrl: string };
   footer: { copyright: string; logo: string };
 };
@@ -54,21 +55,37 @@ export const defaultPortfolioContent: PortfolioContent = {
     profileImage: "", cvLink: "#", primaryCtaLabel: "Ahmed's CV", primaryCtaLink: "#", secondaryCtaLabel: "See work", secondaryCtaLink: "#projects",
   },
   navigation: [
-    { id: "home", label: "Home", link: "#home" }, { id: "projects", label: "Projects", link: "#projects" }, { id: "about", label: "About", link: "#about" }, { id: "services", label: "Services", link: "#services" }, { id: "contact", label: "Contact", link: "#contact" }, { id: "arabic", label: "Arabic", link: "#" },
+    { id: "home", label: "Home", link: "#home" }, { id: "projects", label: "Projects", link: "#projects" }, { id: "about", label: "About", link: "#about" }, { id: "services", label: "Services", link: "#services" }, { id: "resources", label: "Resources", link: "#resources" }, { id: "contact", label: "Contact", link: "#contact" }, { id: "arabic", label: "Arabic", link: "#" },
   ],
   projects: [],
   about: { profileImage: "", name: "Ahmed Salah", bio: "Senior Product Designer (UI UX) with 4+ years of experience designing SaaS platforms across FinTech, LegalTech, and Property Management. Experienced in leading end-to-end product design from discovery and UX research to scalable design systems, prototypes, and developer handoff.", socialLinks: { behance: "https://www.behance.net/ahmedsalaha1997", linkedin: "https://www.linkedin.com/in/ahmedsalah1997/", whatsapp: "https://wa.me/201015949764" } },
   experience: websiteContentBaseline.experience, certifications: websiteContentBaseline.certifications, education: websiteContentBaseline.education, skills: websiteContentBaseline.skills,
   languages: [{ id: "arabic", name: "Arabic", proficiency: "Native or bilingual proficiency" }, { id: "english", name: "English", proficiency: "Professional working proficiency" }],
+  resources: [
+    { id: "product-discovery-checklist", title: "Product discovery checklist", description: "A practical checklist to help you frame the problem, align the team, and begin discovery with confidence.", type: "Download", coverImage: "", link: "" },
+    { id: "design-systems-guide", title: "Design systems in practice", description: "A concise guide to creating scalable foundations, reusable components, and clearer product experiences.", type: "Article", coverImage: "", link: "" },
+    { id: "product-thinking-toolkit", title: "Product thinking toolkit", description: "A collection of prompts and frameworks for moving from an early idea to a focused product direction.", type: "Product", coverImage: "", link: "" },
+  ],
   contact: { heading: "Let's create something amazing together.", description: "Have a product challenge, idea, or opportunity? I'd love to hear about it.", email: "ahmedsalaha1997@gmail.com", whatsAppNumber: "+20 101 594 9764", whatsAppLink: "https://wa.me/201015949764", linkedInUrl: "https://www.linkedin.com/in/ahmedsalah1997/", behanceUrl: "https://www.behance.net/ahmedsalaha1997/projects" },
   footer: { copyright: "© 2026 Ahmed Salah. All Rights Reserved.", logo: "" },
 };
 
 export function mergePortfolioContent(value: Partial<PortfolioContent>): PortfolioContent {
   const useBaseline = <T,>(items: T[] | undefined, baseline: T[]) => items && items.length > 0 ? items : baseline;
+  const sourceNavigation = value.navigation || defaultPortfolioContent.navigation;
+  const navigation = sourceNavigation.some((item) => item.id === "resources")
+    ? sourceNavigation
+    : (() => {
+      const contactIndex = sourceNavigation.findIndex((item) => item.id === "contact");
+      const resourcesItem = { id: "resources", label: "Resources", link: "#resources" };
+      return contactIndex === -1
+        ? [...sourceNavigation, resourcesItem]
+        : [...sourceNavigation.slice(0, contactIndex), resourcesItem, ...sourceNavigation.slice(contactIndex)];
+    })();
   return {
     ...defaultPortfolioContent,
     ...value,
+    navigation,
     hero: { ...defaultPortfolioContent.hero, ...value.hero },
     about: { ...defaultPortfolioContent.about, ...value.about, socialLinks: { ...defaultPortfolioContent.about.socialLinks, ...value.about?.socialLinks } },
     contact: { ...defaultPortfolioContent.contact, ...value.contact },

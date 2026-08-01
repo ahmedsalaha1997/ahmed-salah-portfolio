@@ -8,14 +8,15 @@ import { contentService } from "../lib/content-service";
 import { mergePortfolioContent, type PortfolioContent, type PortfolioContentBase } from "../lib/portfolio-content";
 import { localizeContent, type SiteLanguage } from "./LanguageProvider";
 
-type SectionKey = "hero" | "navigation" | "projects" | "about" | "experience" | "certifications" | "education" | "skills" | "languages" | "contact" | "footer";
-type Field = { key: string; label: string; type?: "text" | "textarea" | "image" | "list" };
+type SectionKey = "hero" | "navigation" | "projects" | "about" | "experience" | "certifications" | "education" | "skills" | "languages" | "resources" | "contact" | "footer";
+type Field = { key: string; label: string; type?: "text" | "textarea" | "image" | "file" | "list" };
 type Item = Record<string, unknown> & { id: string };
 
 const sections: Array<{ key: SectionKey; label: string }> = [
   { key: "hero", label: "Hero" }, { key: "navigation", label: "Navigation" }, { key: "projects", label: "Projects" },
   { key: "about", label: "About" }, { key: "experience", label: "Experience" }, { key: "certifications", label: "Licences & certifications" },
   { key: "education", label: "Education" }, { key: "skills", label: "Skills" }, { key: "languages", label: "Languages" },
+  { key: "resources", label: "Resources" },
   { key: "contact", label: "Contact" }, { key: "footer", label: "Footer" },
 ];
 
@@ -27,6 +28,7 @@ const collectionFields: Record<string, Field[]> = {
   education: [{ key: "logo", label: "Institution logo", type: "image" }, { key: "degree", label: "Degree" }, { key: "institutionName", label: "Institution name" }],
   skills: [{ key: "name", label: "Skill name" }, { key: "icon", label: "Icon name" }],
   languages: [{ key: "name", label: "Language" }, { key: "proficiency", label: "Proficiency" }],
+  resources: [{ key: "title", label: "Resource title" }, { key: "type", label: "Type (Download, Article, or Product)" }, { key: "coverImage", label: "Cover image", type: "image" }, { key: "description", label: "Description", type: "textarea" }, { key: "link", label: "Resource file or external link", type: "file" }],
 };
 
 const emptyItems: Record<string, Omit<Item, "id">> = {
@@ -37,6 +39,7 @@ const emptyItems: Record<string, Omit<Item, "id">> = {
   education: { logo: "", degree: "", institutionName: "" },
   skills: { name: "New skill", icon: "Sparkles" },
   languages: { name: "New language", proficiency: "" },
+  resources: { title: "New resource", type: "Download", coverImage: "", description: "", link: "" },
 };
 
 function clone<T>(value: T): T { return structuredClone(value); }
@@ -94,6 +97,43 @@ function ImageField({ label, value, token, onChange }: { label: string; value: s
   </div>;
 }
 
+function ResourceFileField({ label, value, token, onChange }: { label: string; value: string; token: string; onChange: (value: string) => void }) {
+  const [uploading, setUploading] = useState(false);
+  const onFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const allowed = [
+      "application/pdf", "application/zip", "application/x-zip-compressed", "text/plain",
+      "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+      "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ];
+    if (!allowed.includes(file.type) || file.size > 15 * 1024 * 1024) {
+      toast.error("Choose a PDF, ZIP, Office document, or text file smaller than 15 MB.");
+      event.target.value = "";
+      return;
+    }
+    setUploading(true);
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const result = await contentService.upload(String(reader.result), token);
+        onChange(result.url);
+        toast.success("Resource file uploaded.");
+      } catch (error) { toast.error(error instanceof Error ? error.message : "Upload failed."); }
+      finally { setUploading(false); event.target.value = ""; }
+    };
+    reader.readAsDataURL(file);
+  };
+  return <div>
+    <FieldLabel>{label}</FieldLabel>
+    <div className="space-y-3 rounded-xl border border-dashed border-[#42617c] bg-[#071523] p-3">
+      <input className="w-full rounded-lg border border-[#36516d] bg-[#081727] px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-[#72879a] focus:border-[#63adff] focus:ring-2 focus:ring-[#277bcc]/20" value={value} placeholder="Paste a public URL, or upload a file below" onChange={(event) => onChange(event.target.value)} />
+      <div className="flex flex-wrap items-center gap-2"><label className="inline-flex cursor-pointer items-center gap-2 rounded-lg bg-[#126ab0] px-3 py-2 text-xs font-medium text-white hover:bg-[#197dc9]"><ImagePlus size={15} />{uploading ? "Uploading…" : "Upload file"}<input className="sr-only" type="file" accept=".pdf,.zip,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt" onChange={onFile} disabled={uploading} /></label>{value && <button type="button" onClick={() => onChange("")} className="inline-flex items-center gap-1.5 rounded-lg border border-[#38526d] px-3 py-2 text-xs text-[#c4d0dc] hover:border-red-400/60 hover:text-red-200"><X size={14} />Remove link</button>}<span className="text-xs text-[#8da3b8]">PDF, ZIP, Office, or text — up to 15 MB.</span></div>
+    </div>
+  </div>;
+}
+
 function CollectionEditor({ title, items, fields, token, onChange }: { title: string; items: Item[]; fields: Field[]; token: string; onChange: (items: Item[]) => void }) {
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const update = (index: number, key: string, value: string | string[]) => onChange(items.map((item, current) => current === index ? { ...item, [key]: value } : item));
@@ -105,7 +145,7 @@ function CollectionEditor({ title, items, fields, token, onChange }: { title: st
     {items.length === 0 && <div className="rounded-xl border border-dashed border-[#38526d] p-8 text-center text-sm text-[#8da3b8]">No items yet. Add the first one.</div>}
     {items.map((item, index) => <article key={item.id} draggable onDragStart={() => setDragIndex(index)} onDragOver={(event) => event.preventDefault()} onDrop={() => { if (dragIndex !== null) move(dragIndex, index); setDragIndex(null); }} className="rounded-2xl border border-[#29445f] bg-[#091a2b] p-4 shadow-[0_12px_30px_rgba(0,0,0,0.12)]">
       <div className="mb-4 flex items-center justify-between gap-3 border-b border-white/10 pb-3"><div className="flex items-center gap-2 text-sm font-semibold text-white"><GripVertical size={17} className="cursor-grab text-[#7d9bb4]" />{String(item.title || item.jobTitle || item.name || item.label || item.degree || "Item")}</div><div className="flex gap-1"><button type="button" disabled={index === 0} onClick={() => move(index, index - 1)} className="rounded-md p-1.5 text-[#b7c9d9] hover:bg-white/10 disabled:opacity-30" aria-label="Move up"><ChevronUp size={16} /></button><button type="button" disabled={index === items.length - 1} onClick={() => move(index, index + 1)} className="rounded-md p-1.5 text-[#b7c9d9] hover:bg-white/10 disabled:opacity-30" aria-label="Move down"><ChevronDown size={16} /></button><button type="button" onClick={() => remove(index)} className="rounded-md p-1.5 text-red-200 hover:bg-red-400/10" aria-label="Delete"><Trash2 size={16} /></button></div></div>
-      <div className="grid gap-4 md:grid-cols-2">{fields.map((field) => <div key={field.key} className={field.type === "textarea" || field.type === "list" || field.type === "image" ? "md:col-span-2" : ""}>{field.type === "image" ? <ImageField label={field.label} value={String(item[field.key] || "")} token={token} onChange={(value) => update(index, field.key, value)} /> : <TextField label={field.label} value={Array.isArray(item[field.key]) ? (item[field.key] as string[]).join("\n") : String(item[field.key] || "")} multiline={field.type === "textarea" || field.type === "list"} onChange={(value) => update(index, field.key, field.type === "list" ? value.replace(/\r/g, "").split("\n") : title === "Projects" && field.key === "link" ? value.replace(/^#(?=(?:https?:\/\/|www\.))/i, "") : value)} />}</div>)}</div>
+      <div className="grid gap-4 md:grid-cols-2">{fields.map((field) => <div key={field.key} className={field.type === "textarea" || field.type === "list" || field.type === "image" || field.type === "file" ? "md:col-span-2" : ""}>{field.type === "image" ? <ImageField label={field.label} value={String(item[field.key] || "")} token={token} onChange={(value) => update(index, field.key, value)} /> : field.type === "file" ? <ResourceFileField label={field.label} value={String(item[field.key] || "")} token={token} onChange={(value) => update(index, field.key, value)} /> : <TextField label={field.label} value={Array.isArray(item[field.key]) ? (item[field.key] as string[]).join("\n") : String(item[field.key] || "")} multiline={field.type === "textarea" || field.type === "list"} onChange={(value) => update(index, field.key, field.type === "list" ? value.replace(/\r/g, "").split("\n") : title === "Projects" && field.key === "link" ? value.replace(/^#(?=(?:https?:\/\/|www\.))/i, "") : value)} />}</div>)}</div>
     </article>)}
   </div>;
 }
