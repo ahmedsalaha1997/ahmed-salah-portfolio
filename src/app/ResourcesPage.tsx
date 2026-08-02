@@ -5,6 +5,7 @@ import ResourcesSection from "./ResourcesSection";
 import ScrollReveal from "./ScrollReveal";
 import SpaceshipCursor from "./SpaceshipCursor";
 import { useLanguage } from "./LanguageProvider";
+import PixelCatchGame from "./PixelCatchGame";
 
 export default function ResourcesPage() {
   const { isArabic } = useLanguage();
@@ -12,6 +13,7 @@ export default function ResourcesPage() {
     <div className="portfolio-site relative min-h-screen w-full overflow-hidden" dir={isArabic ? "rtl" : "ltr"} style={{ background: "linear-gradient(to bottom, #0b121c, #041933)" }}>
       <div className="relative z-10">
         <SpaceshipCursor />
+        <PixelCatchGame />
         <header className="w-full"><Header /></header>
         <main>
           <ScrollReveal className="w-full" variant="hero"><ResourcesSection /></ScrollReveal>

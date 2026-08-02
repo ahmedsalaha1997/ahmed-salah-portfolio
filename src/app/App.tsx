@@ -10,6 +10,7 @@ import ScrollReveal from "./ScrollReveal";
 import SpaceshipCursor from "./SpaceshipCursor";
 import { useLanguage } from "./LanguageProvider";
 import ServicesSection from "./ServicesSection";
+import PixelCatchGame from "./PixelCatchGame";
 
 export default function App() {
   const { isArabic } = useLanguage();
@@ -21,6 +22,7 @@ export default function App() {
     >
       <div className="relative z-10">
         <SpaceshipCursor />
+        <PixelCatchGame />
         <header className="w-full">
         <Header />
         </header>
