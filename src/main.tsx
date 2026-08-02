@@ -6,6 +6,7 @@
   import { ContentProvider } from "./app/ContentProvider.tsx";
   import { LanguageProvider } from "./app/LanguageProvider.tsx";
   import tabIcon from "./assets/logo-dak.svg";
+  import { initializePostHog } from "./lib/posthog.ts";
   import "./styles/index.css";
 
   const favicon = document.querySelector<HTMLLinkElement>('link[rel="icon"]');
@@ -13,6 +14,8 @@
 
   const isAdminRoute = window.location.pathname === "/admin" || window.location.pathname.startsWith("/admin/");
   const isResourcesRoute = window.location.pathname === "/resources" || window.location.pathname.startsWith("/resources/");
+
+  initializePostHog();
 
   createRoot(document.getElementById("root")!).render(
     isAdminRoute ? <AdminDashboard /> : <LanguageProvider><ContentProvider>{isResourcesRoute ? <ResourcesPage /> : <App />}</ContentProvider></LanguageProvider>,

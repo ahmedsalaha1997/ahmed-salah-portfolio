@@ -3,6 +3,7 @@ import { Menu, X } from "lucide-react";
 import svgPaths from "./svg-espo4fjubp";
 import { usePortfolioContent } from "../../app/ContentProvider";
 import { useLanguage } from "../../app/LanguageProvider";
+import { captureAnalyticsEvent } from "../../lib/posthog";
 
 function PersonalLogo() {
   return (
@@ -60,7 +61,7 @@ function Navtabs({ items, onLanguageToggle }: { items: Array<{ id: string; label
   return (
     <div className="content-stretch flex gap-[24px] h-[21px] items-center relative shrink-0" data-name="navtabs">
       {items.map((item, index) => (
-        <a className="content-stretch flex items-center justify-center relative shrink-0" data-name="navtab" href={resolveLink(item)} key={item.id} onClick={(event) => { if (item.id === "arabic") { event.preventDefault(); onLanguageToggle(); } }}>
+        <a className="content-stretch flex items-center justify-center relative shrink-0" data-name="navtab" href={resolveLink(item)} key={item.id} onClick={(event) => { if (item.id === "arabic") { event.preventDefault(); onLanguageToggle(); return; } captureAnalyticsEvent("navigation_clicked", { destination: item.id, label: item.label }); }}>
           <p className={`[word-break:break-word] font-['IBM_Plex_Sans:Regular',sans-serif] ${index === 0 ? "font-bold text-[#0a70ae]" : "font-normal text-[#cdd6db]"} leading-[normal] relative shrink-0 text-[20px] whitespace-nowrap`} style={{ fontVariationSettings: '"wdth" 100' }}>
             {item.label}
           </p>
@@ -146,7 +147,7 @@ export default function Header() {
               className={`text-left px-6 py-4 text-[18px] font-['IBM_Plex_Sans',sans-serif] border-b border-white/10 last:border-0 transition-colors ${
                 i === 0 ? "text-[#0a70ae] font-bold" : "text-[#cdd6db] font-normal"
               }`}
-              onClick={(event) => { if (item.id === "arabic") { event.preventDefault(); toggleLanguage(); } setOpen(false); }}
+              onClick={(event) => { if (item.id === "arabic") { event.preventDefault(); toggleLanguage(); } else { captureAnalyticsEvent("navigation_clicked", { destination: item.id, label: item.label }); } setOpen(false); }}
             >
               {item.label}
             </a>
