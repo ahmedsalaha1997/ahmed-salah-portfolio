@@ -1,6 +1,6 @@
-import imgFrame16188734951 from "./ae3bf9dca22cd7e85785f981a2a9dfdd7b3e9c0a.png";
-import imgFrame1618873494 from "./9dc48759d089a6420c85250423bde9c61cdfebdd.png";
-import imgFrame1618873496 from "./fe3ef8434fba17db6cd9587805786a3742d9826f.png";
+import imgFrame16188734951 from "./ae3bf9dca22cd7e85785f981a2a9dfdd7b3e9c0a.webp";
+import imgFrame1618873494 from "./9dc48759d089a6420c85250423bde9c61cdfebdd.webp";
+import imgFrame1618873496 from "./fe3ef8434fba17db6cd9587805786a3742d9826f.webp";
 
 function Frame() {
   return (

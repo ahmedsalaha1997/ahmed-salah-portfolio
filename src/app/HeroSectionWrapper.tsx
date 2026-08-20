@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import imgPic2 from "@/imports/HeroSection/pic.png";
-import imgDecorativeElement11 from "@/imports/HeroSection/345b08b460847af7815a3a78c1be01f3ba79c099.png";
-import imgDecorativeElement1 from "@/imports/HeroSection/57c704d8e0fa34caea090fbf5b294385d9c6299b.png";
+import imgPic2 from "@/imports/HeroSection/pic.webp";
+import imgDecorativeElement11 from "@/imports/HeroSection/345b08b460847af7815a3a78c1be01f3ba79c099.webp";
+import imgDecorativeElement1 from "@/imports/HeroSection/57c704d8e0fa34caea090fbf5b294385d9c6299b.webp";
 import CtaImport from "./Cta";
 import { usePortfolioContent } from "./ContentProvider";
 
@@ -9,7 +9,7 @@ function HeroImage({ src }: { src: string }) {
   return (
     <div className="h-[215.53px] relative shrink-0 w-[180px] z-10" data-name="hero image">
       <div className="absolute h-[215.53px] left-0 top-0 w-[180px]" data-name="pic 2">
-        <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={src || imgPic2} />
+        <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={src || imgPic2} width={180} height={216} decoding="async" fetchPriority="high" />
       </div>
       <div className="absolute left-[150px] size-[12px] top-[180.58px]" data-name="online indicator">
         <div className="absolute inset-[33.33%]">
@@ -62,9 +62,10 @@ function TypewriterWord({ words }: { words: string[] }) {
   }, [isDeleting, text, wordIndex, words]);
 
   return (
-    <span className="inline-flex w-[8.5ch] items-baseline text-left" aria-label={words[wordIndex]}>
-      <span>{text}</span>
+    <span className="inline-flex w-[8.5ch] items-baseline text-left">
+      <span aria-hidden="true">{text}</span>
       <span aria-hidden="true" className="ml-[0.04em] animate-[hero-cursor_1s_steps(1,end)_infinite] text-[#78b4ff]">|</span>
+      <span className="sr-only">{words[wordIndex]}</span>
     </span>
   );
 }
@@ -72,12 +73,12 @@ function TypewriterWord({ words }: { words: string[] }) {
 function Content({ title, words, subtitle, primaryLabel, primaryLink, secondaryLabel, secondaryLink }: { title: string; words: string[]; subtitle: string; primaryLabel: string; primaryLink: string; secondaryLabel: string; secondaryLink: string }) {
   return (
     <div className="content-stretch flex flex-col gap-[20px] items-center relative shrink-0 w-full max-w-[1040px] px-4 z-10" data-name="CONTENT">
-      <p
+      <h1
         className="[word-break:break-word] font-['IBM_Plex_Sans',sans-serif] font-bold leading-[normal] w-full relative shrink-0 text-[28px] sm:text-[40px] md:text-[54px] lg:whitespace-nowrap text-center text-white"
         style={{ fontVariationSettings: '"wdth" 100' }}
       >
         {title} <TypewriterWord words={words} />
-      </p>
+      </h1>
       <p
         className="[word-break:break-word] font-['IBM_Plex_Sans',sans-serif] font-normal leading-[1.4] relative shrink-0 text-[#cdd6db] text-[15px] sm:text-[18px] md:text-[20px] text-center w-full max-w-[508px]"
         style={{ fontVariationSettings: '"wdth" 100' }}
@@ -111,10 +112,10 @@ export default function HeroSectionWrapper() {
       <HeroImage src={hero.profileImage} />
       <Content title={hero.title} words={hero.words.length ? hero.words : ["Impact."]} subtitle={hero.subtitle} primaryLabel={hero.primaryCtaLabel} primaryLink={hero.primaryCtaLink || hero.cvLink} secondaryLabel={hero.secondaryCtaLabel} secondaryLink={hero.secondaryCtaLink} />
       <div className="hidden lg:block absolute h-[103px] right-0 top-[29.58px] w-[91px] z-10 animate-[hero-float-right_6s_ease-in-out_infinite]" data-name="DECORATIVE ELEMENT-1 1">
-        <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgDecorativeElement11} />
+        <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgDecorativeElement11} width={91} height={103} loading="lazy" decoding="async" />
       </div>
       <div className="hidden lg:block absolute h-[152px] left-0 top-[127.58px] w-[159px] z-10 animate-[hero-float-left_7s_ease-in-out_infinite]" data-name="DECORATIVE ELEMENT 1">
-        <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgDecorativeElement1} />
+        <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgDecorativeElement1} width={159} height={152} loading="lazy" decoding="async" />
       </div>
       <style>{`
         @keyframes hero-float-left {

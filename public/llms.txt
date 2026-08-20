@@ -1,0 +1,27 @@
+# Ahmed Salah Senior Product Designer
+
+> Portfolio of Ahmed Salah, a senior product designer specializing in SaaS, fintech, legal tech, product strategy, UX/UI design, design systems, and product management.
+
+[Visit Ahmed Salah's portfolio](https://www.ahmedsalah.work/).
+
+## Website
+
+- [Home](https://www.ahmedsalah.work/): Portfolio overview, selected work, professional experience, services, skills, and contact details.
+- [Resources](https://www.ahmedsalah.work/resources): Downloadable resources, articles, and product-related material.
+
+## Key sections
+
+- [Selected work](https://www.ahmedsalah.work/#projects)
+- [About](https://www.ahmedsalah.work/#about)
+- [Services](https://www.ahmedsalah.work/#services)
+- [Contact](https://www.ahmedsalah.work/#contact)
+
+## Contact
+
+- [LinkedIn](https://www.linkedin.com/in/ahmedsalah1997/)
+- [Behance](https://www.behance.net/ahmedsalah1997)
+
+## Notes
+
+- The portfolio is available in English and Arabic.
+- Content, projects, and resources are managed through a private CMS.

@@ -1,0 +1,90 @@
+/*
+ * Lightweight CSS interpretation of the SpecularButton treatment.
+ * It intentionally avoids a canvas/WebGL render loop so public CTAs stay fast.
+ */
+.portfolio-site .specular-button {
+  isolation: isolate;
+  overflow: hidden;
+  transform: translateZ(0);
+}
+
+.portfolio-site .specular-button::before,
+.portfolio-site .specular-button::after {
+  border-radius: inherit;
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+/* A quiet, glass-like edge that keeps the existing navy/blue language. */
+.portfolio-site .specular-button::before {
+  background: linear-gradient(
+    138deg,
+    rgba(224, 246, 255, 0.7),
+    rgba(147, 211, 255, 0.12) 25%,
+    transparent 52%,
+    rgba(65, 144, 255, 0.56)
+  );
+  opacity: 0.46;
+  padding: 1px;
+  transition: opacity 220ms ease;
+  z-index: 2;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* The highlight only travels while a user intentionally hovers or focuses. */
+.portfolio-site .specular-button::after {
+  background: linear-gradient(
+    106deg,
+    transparent 40%,
+    rgba(124, 193, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.32) 50%,
+    rgba(119, 182, 255, 0.1) 55%,
+    transparent 60%
+  );
+  inset: -95% -45%;
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translate3d(-68%, 0, 0) rotate(-12deg);
+  z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .portfolio-site .specular-button:hover::before,
+  .portfolio-site .specular-button:focus-visible::before {
+    opacity: 0.94;
+  }
+
+  .portfolio-site .specular-button:hover::after,
+  .portfolio-site .specular-button:focus-visible::after {
+    animation: specular-sweep 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    opacity: 1;
+  }
+}
+
+@keyframes specular-sweep {
+  from {
+    transform: translate3d(-68%, 0, 0) rotate(-12deg);
+  }
+
+  to {
+    transform: translate3d(68%, 0, 0) rotate(-12deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-site .specular-button::before,
+  .portfolio-site .specular-button::after {
+    animation: none !important;
+    transition: none;
+  }
+
+  .portfolio-site .specular-button::after {
+    display: none;
+  }
+}

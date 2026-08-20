@@ -1,15 +1,15 @@
-import imgLight2 from "./24de6a5223a6b71243b6d0cba4981df5157a47af.png";
-import img13 from "./26d519186a2aae552849519e0a86d679bf306b4e.png";
-import img22 from "./5518fe2b28329be91d2a823d8e0795ad5289b343.png";
-import img32 from "./eaefa79dc987f53e90bf26ce752884849e508550.png";
-import img42 from "./6f87a6cd046be283a12660bf77337b706426bdc1.png";
-import img52 from "./fa1064ecedae42eda0c796597f9ac2cef2a9ee6e.png";
-import img62 from "./c4f51c961e9a04c991a31762d25beeb83605010a.png";
-import img72 from "./18ec932dd770b2179dd6358694c77721ad0c86dc.png";
-import img82 from "./8fa90a5d8eece65c64e0184ea20e723b1e4766d3.png";
-import img92 from "./bae28bb1c68740251137e5fb42842d7dce03bf7e.png";
-import img102 from "./946384284cdfe94c147cf50c28888395165382b6.png";
-import img112 from "./f1e88a50f16fdb0c718d0dcfa1d7f94963be350b.png";
+import imgLight2 from "./24de6a5223a6b71243b6d0cba4981df5157a47af.webp";
+import img13 from "./26d519186a2aae552849519e0a86d679bf306b4e.webp";
+import img22 from "./5518fe2b28329be91d2a823d8e0795ad5289b343.webp";
+import img32 from "./eaefa79dc987f53e90bf26ce752884849e508550.webp";
+import img42 from "./6f87a6cd046be283a12660bf77337b706426bdc1.webp";
+import img52 from "./fa1064ecedae42eda0c796597f9ac2cef2a9ee6e.webp";
+import img62 from "./c4f51c961e9a04c991a31762d25beeb83605010a.webp";
+import img72 from "./18ec932dd770b2179dd6358694c77721ad0c86dc.webp";
+import img82 from "./8fa90a5d8eece65c64e0184ea20e723b1e4766d3.webp";
+import img92 from "./bae28bb1c68740251137e5fb42842d7dce03bf7e.webp";
+import img102 from "./946384284cdfe94c147cf50c28888395165382b6.webp";
+import img112 from "./f1e88a50f16fdb0c718d0dcfa1d7f94963be350b.webp";
 
 export default function ScrollWorkSamples() {
   return (

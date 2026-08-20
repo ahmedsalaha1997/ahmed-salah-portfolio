@@ -16,7 +16,7 @@ function ContactCard({ contact }: { contact: ContactLink }) {
 
   return (
     <a
-      className={`group flex min-w-0 items-center gap-3 rounded-2xl border p-4 transition duration-300 hover:-translate-y-0.5 ${contact.tone} ${contact.wide ? "sm:col-span-2" : ""}`}
+      className={`specular-button group flex min-w-0 items-center gap-3 rounded-2xl border p-4 transition duration-300 hover:-translate-y-0.5 ${contact.tone} ${contact.wide ? "sm:col-span-2" : ""}`}
       href={contact.href}
       rel="noreferrer"
       target={contact.href.startsWith("mailto:") ? undefined : "_blank"}

@@ -1,10 +1,9 @@
-import imgPlaceholder from "./9b50c71c017b754c585bd1d41fa468cc3aa63894.png";
-import imgLegusBackdrop from "./518b2de979902715cc619bb269718327fe8903fc.png";
-import imgLegus from "./85101a4f0b2fb3c85fabd9851e45ee279cc15c41.png";
-import imgKba from "./084e20ab7d69e0fbc7b7b974fbbb81b48d464bab.png";
-import imgVitJohn from "./3577db176a1ca5a56de329b6cfda8ea7cc834c85.png";
-import imgAtqan from "./f38fbad95ec68751bbbb3718f35292beeed2184f.png";
-import imgPerforms from "./8aa4a2533bad03050ac8b27773417d24aa1666ef.png";
+import imgLegusBackdrop from "./518b2de979902715cc619bb269718327fe8903fc.webp";
+import imgLegus from "./85101a4f0b2fb3c85fabd9851e45ee279cc15c41.webp";
+import imgKba from "./084e20ab7d69e0fbc7b7b974fbbb81b48d464bab.webp";
+import imgVitJohn from "./3577db176a1ca5a56de329b6cfda8ea7cc834c85.webp";
+import imgAtqan from "./f38fbad95ec68751bbbb3718f35292beeed2184f.webp";
+import imgPerforms from "./8aa4a2533bad03050ac8b27773417d24aa1666ef.webp";
 import { usePortfolioContent } from "../../app/ContentProvider";
 import { translateText, useLanguage } from "../../app/LanguageProvider";
 
@@ -19,12 +18,12 @@ const defaultProjects: Project[] = [
   {
     title: "Legus — The Ultimate Product for Managing Law Offices",
     tags: ["Product Design", "Web App", "Dashboard", "UI/UX", "SaaS"],
-    images: [imgPlaceholder, imgLegusBackdrop, imgLegus],
+    images: [imgLegus],
   },
   {
     title: "Wasl — App for the Saudi Real Estate Market",
     tags: ["Product Design", "Mobile App", "Dashboard", "UI/UX", "2025"],
-    images: [imgPlaceholder, imgLegusBackdrop],
+    images: [imgLegusBackdrop],
   },
   {
     title: "Official Mobile App for the Kuwait Bar Association",
@@ -44,21 +43,28 @@ const defaultProjects: Project[] = [
   {
     title: "Performs for Maximizing Athletic Potential",
     tags: ["Product Design", "B2B", "Dashboard", "UI/UX", "2022"],
-    images: [imgAtqan, imgPerforms],
+    images: [imgPerforms],
   },
 ];
 
 function ProjectImage({ images, title }: Pick<Project, "images" | "title">) {
+  // The existing visual treatment intentionally displayed the top image in the
+  // stack. Render that image only so hidden gallery layers are not downloaded.
+  const preview = images.at(-1);
+
   return (
     <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl bg-[#101b29]">
-      {images.map((src, index) => (
+      {preview ? (
         <img
-          key={src}
-          alt={index === images.length - 1 ? `${title} preview` : ""}
+          alt={`${title} preview`}
           className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
-          src={src}
+          src={preview}
+          width={1600}
+          height={1200}
+          loading="lazy"
+          decoding="async"
         />
-      ))}
+      ) : null}
     </div>
   );
 }

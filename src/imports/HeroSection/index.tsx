@@ -1,6 +1,6 @@
-import imgPic2 from "./653777dd1729c34a905a5a46acbe3933f4685f95.png";
-import imgDecorativeElement11 from "./345b08b460847af7815a3a78c1be01f3ba79c099.png";
-import imgDecorativeElement1 from "./57c704d8e0fa34caea090fbf5b294385d9c6299b.png";
+import imgPic2 from "./653777dd1729c34a905a5a46acbe3933f4685f95.webp";
+import imgDecorativeElement11 from "./345b08b460847af7815a3a78c1be01f3ba79c099.webp";
+import imgDecorativeElement1 from "./57c704d8e0fa34caea090fbf5b294385d9c6299b.webp";
 
 function HeroImage() {
   return (

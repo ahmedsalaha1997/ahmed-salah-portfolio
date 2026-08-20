@@ -1,4 +1,4 @@
-import imgStrip from "@/imports/InfinateVerticalScrolling/ae3bf9dca22cd7e85785f981a2a9dfdd7b3e9c0a.png";
+import imgStrip from "@/imports/InfinateVerticalScrolling/ae3bf9dca22cd7e85785f981a2a9dfdd7b3e9c0a.webp";
 
 export default function InfiniteVerticalScroll() {
   return (
@@ -19,8 +19,8 @@ export default function InfiniteVerticalScroll() {
           style={{ animation: "scrollUp 20s linear infinite" }}
         >
           {/* Duplicate strip for seamless loop */}
-          <img alt="" src={imgStrip} className="w-[1042px] max-w-full pointer-events-none" />
-          <img alt="" src={imgStrip} className="w-[1042px] max-w-full pointer-events-none" />
+          <img alt="" src={imgStrip} width={1212} height={1800} loading="lazy" decoding="async" className="w-[1042px] max-w-full pointer-events-none" />
+          <img alt="" src={imgStrip} width={1212} height={1800} loading="lazy" decoding="async" className="w-[1042px] max-w-full pointer-events-none" />
         </div>
       </div>
 

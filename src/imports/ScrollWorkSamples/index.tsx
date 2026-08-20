@@ -1,16 +1,16 @@
 import svgPaths from "./svg-ujke7obzz8";
-import imgWebsiteArea from "./6325532b9efd15e0a824c95cc591678a9192a29a.png";
-import imgFrame1618873491 from "./a1a0d850387bdd1914d0b1d5aab387c9cf8b2df0.png";
-import imgWebsiteArea1 from "./c751996e199fb7e48fbee9da2379239fcdefe3e8.png";
-import imgFrame1618873492 from "./3243cb3bee9b608f02d6a1cdc345c98ab94838eb.png";
-import imgFrame1618873493 from "./ea519961fe20d3c45f5a9a392b58dbb60cb7ae6e.png";
-import imgWebsiteArea2 from "./b9f286837809a7f7fa3f7435f81e2e1ed21caa38.png";
-import imgFrame1618873494 from "./a175bac0457c7b1dc8e409ee68bcea34791ecb6e.png";
-import imgWebsiteArea3 from "./441c2997c05e4e5f2c88bbd6908170d0a81b0d20.png";
-import imgFrame1618873495 from "./de190ff9dbefd75ed28ae0785548edb890232c2e.png";
-import imgWebsiteArea4 from "./98e971cb08f3fa94bba79895542a20028fef85f1.png";
-import imgFrame1618873496 from "./38138bb3c0a7796c60dbdff43f6904491bc33857.png";
-import imgWebsiteArea5 from "./d7448b5a707b8885d6d138352c26ce7ba5a0dd73.png";
+import imgWebsiteArea from "./6325532b9efd15e0a824c95cc591678a9192a29a.webp";
+import imgFrame1618873491 from "./a1a0d850387bdd1914d0b1d5aab387c9cf8b2df0.webp";
+import imgWebsiteArea1 from "./c751996e199fb7e48fbee9da2379239fcdefe3e8.webp";
+import imgFrame1618873492 from "./3243cb3bee9b608f02d6a1cdc345c98ab94838eb.webp";
+import imgFrame1618873493 from "./ea519961fe20d3c45f5a9a392b58dbb60cb7ae6e.webp";
+import imgWebsiteArea2 from "./b9f286837809a7f7fa3f7435f81e2e1ed21caa38.webp";
+import imgFrame1618873494 from "./a175bac0457c7b1dc8e409ee68bcea34791ecb6e.webp";
+import imgWebsiteArea3 from "./441c2997c05e4e5f2c88bbd6908170d0a81b0d20.webp";
+import imgFrame1618873495 from "./de190ff9dbefd75ed28ae0785548edb890232c2e.webp";
+import imgWebsiteArea4 from "./98e971cb08f3fa94bba79895542a20028fef85f1.webp";
+import imgFrame1618873496 from "./38138bb3c0a7796c60dbdff43f6904491bc33857.webp";
+import imgWebsiteArea5 from "./d7448b5a707b8885d6d138352c26ce7ba5a0dd73.webp";
 
 function StopLights() {
   return (

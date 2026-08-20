@@ -6,7 +6,7 @@ function MainCta({ label, href, secondary = false, openInNewTab = false }: { lab
       href={href || "#"}
       target={hasExternalDestination ? "_blank" : undefined}
       rel={hasExternalDestination ? "noreferrer" : undefined}
-      className={`${secondary ? "bg-[rgba(184,184,184,0.2)]" : "bg-[rgba(56,118,252,0.2)]"} flex-1 h-[52px] min-w-px relative rounded-[41px]`}
+      className={`specular-button ${secondary ? "bg-[rgba(184,184,184,0.2)]" : "bg-[rgba(56,118,252,0.2)]"} flex-1 h-[52px] min-w-px relative rounded-[41px]`}
       data-name="Main_CTA"
     >
       <div className="flex flex-row items-center justify-center overflow-clip rounded-[inherit] size-full">

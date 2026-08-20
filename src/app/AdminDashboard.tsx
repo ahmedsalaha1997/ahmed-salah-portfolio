@@ -1,22 +1,25 @@
-import { useEffect, useState, type ChangeEvent } from "react";
+import { useCallback, useEffect, useState, type ChangeEvent } from "react";
 import {
   ArrowLeft, Check, ChevronDown, ChevronUp, FileImage, GripVertical, ImagePlus,
-  LayoutDashboard, LoaderCircle, LockKeyhole, LogOut, Menu, Plus, Save, Trash2, X,
+  LayoutDashboard, LoaderCircle, LockKeyhole, LogOut, Mail, Menu, Plus, RefreshCw, Save, Trash2, X,
 } from "lucide-react";
 import { Toaster, toast } from "sonner";
 import { contentService } from "../lib/content-service";
 import { mergePortfolioContent, type PortfolioContent, type PortfolioContentBase } from "../lib/portfolio-content";
+import { supabase } from "../lib/supabase";
 import { localizeContent, type SiteLanguage } from "./LanguageProvider";
 
-type SectionKey = "hero" | "navigation" | "projects" | "about" | "experience" | "certifications" | "education" | "skills" | "languages" | "resources" | "contact" | "footer";
+type SectionKey = "hero" | "navigation" | "projects" | "about" | "experience" | "certifications" | "education" | "skills" | "languages" | "resources" | "leads" | "contact" | "footer";
 type Field = { key: string; label: string; type?: "text" | "textarea" | "image" | "file" | "list" };
 type Item = Record<string, unknown> & { id: string };
+type ConsultationLead = { id: string; contact: string; source: string | null; status: string | null; created_at: string };
 
 const sections: Array<{ key: SectionKey; label: string }> = [
   { key: "hero", label: "Hero" }, { key: "navigation", label: "Navigation" }, { key: "projects", label: "Projects" },
   { key: "about", label: "About" }, { key: "experience", label: "Experience" }, { key: "certifications", label: "Licences & certifications" },
   { key: "education", label: "Education" }, { key: "skills", label: "Skills" }, { key: "languages", label: "Languages" },
   { key: "resources", label: "Resources" },
+  { key: "leads", label: "Consultation leads" },
   { key: "contact", label: "Contact" }, { key: "footer", label: "Footer" },
 ];
 
@@ -163,9 +166,34 @@ export default function AdminDashboard() {
   const [active, setActive] = useState<SectionKey>("hero"); const [loading, setLoading] = useState(Boolean(token)); const [menuOpen, setMenuOpen] = useState(false); const [saving, setSaving] = useState(false);
   const [contentLanguage, setContentLanguage] = useState<SiteLanguage>("en");
   const [needsWebsiteSync, setNeedsWebsiteSync] = useState(false);
+  const [leads, setLeads] = useState<ConsultationLead[]>([]);
+  const [leadsLoading, setLeadsLoading] = useState(false);
   const dirty = Boolean(saved && draft && isChanged(saved, draft)) || needsWebsiteSync;
   useEffect(() => { if (!token) return; setLoading(true); contentService.getAdmin(token).then((content) => { setSaved(clone(content)); setDraft(clone(content)); setNeedsWebsiteSync(!content.syncState?.websiteContentSyncedAt); }).catch((error) => { sessionStorage.removeItem("portfolio-admin-token"); setToken(""); toast.error(error instanceof Error ? error.message : "Session expired."); }).finally(() => setLoading(false)); }, [token]);
   useEffect(() => { const warn = (event: BeforeUnloadEvent) => { if (dirty) { event.preventDefault(); event.returnValue = ""; } }; window.addEventListener("beforeunload", warn); return () => window.removeEventListener("beforeunload", warn); }, [dirty]);
+  const loadLeads = useCallback(async () => {
+    if (!supabase) { toast.error("Supabase is not configured for this dashboard."); return; }
+    setLeadsLoading(true);
+    const { data, error } = await supabase.from("consultation_leads").select("id, contact, source, status, created_at").order("created_at", { ascending: false });
+    setLeadsLoading(false);
+    if (error) { toast.error(error.message); return; }
+    setLeads((data || []) as ConsultationLead[]);
+  }, []);
+  useEffect(() => { if (active === "leads") void loadLeads(); }, [active, loadLeads]);
+  const updateLeadStatus = async (id: string, status: string) => {
+    if (!supabase) return;
+    const { error } = await supabase.from("consultation_leads").update({ status }).eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    setLeads((items) => items.map((lead) => lead.id === id ? { ...lead, status } : lead));
+    toast.success("Lead status updated.");
+  };
+  const deleteLead = async (id: string) => {
+    if (!supabase || !window.confirm("Delete this lead permanently?")) return;
+    const { error } = await supabase.from("consultation_leads").delete().eq("id", id);
+    if (error) { toast.error(error.message); return; }
+    setLeads((items) => items.filter((lead) => lead.id !== id));
+    toast.success("Lead deleted.");
+  };
   if (!token) return <Login onLogin={setToken} />;
   if (loading || !draft || !saved) return <main className="grid min-h-screen place-items-center bg-[#061424] text-[#cde7ff]"><LoaderCircle className="animate-spin" /></main>;
   const editing = contentLanguage === "ar" ? (draft.arabic ? localizeContent(mergePortfolioContent(draft.arabic), "ar") : localizeContent(draft, "ar")) : draft;
@@ -184,6 +212,7 @@ export default function AdminDashboard() {
   const reset = () => { if (dirty && window.confirm("Reset all unsaved changes on this page?")) setDraft(clone(saved)); };
   const logout = async () => { if (dirty && !window.confirm("You have unsaved changes. Log out anyway?")) return; await contentService.logout(token).catch(() => undefined); sessionStorage.removeItem("portfolio-admin-token"); setToken(""); };
   const body = (() => {
+    if (active === "leads") return <div className="space-y-5" dir="ltr"><div className="flex flex-wrap items-center justify-between gap-3"><div><p className="text-sm font-semibold text-white">Free consultation requests</p><p className="mt-1 text-sm text-[#9eb2c5]">Contacts collected after visitors catch the pixel scout.</p></div><button type="button" onClick={() => void loadLeads()} disabled={leadsLoading} className="inline-flex items-center gap-2 rounded-xl border border-[#38536d] px-3 py-2 text-sm text-[#c0d2e1] hover:bg-white/5 disabled:opacity-50"><RefreshCw size={16} className={leadsLoading ? "animate-spin" : ""} />Refresh</button></div>{leadsLoading && leads.length === 0 ? <div className="grid min-h-40 place-items-center text-[#9eb2c5]"><LoaderCircle className="animate-spin" /></div> : leads.length === 0 ? <div className="rounded-xl border border-dashed border-[#38526d] px-5 py-12 text-center"><Mail className="mx-auto mb-3 text-[#6c9ac4]" size={26} /><p className="font-medium text-white">No consultation requests yet.</p><p className="mt-1 text-sm text-[#8da3b8]">New contacts will appear here automatically.</p></div> : <div className="overflow-hidden rounded-xl border border-[#29445f]"><div className="grid grid-cols-[minmax(0,1fr)_130px_150px_44px] gap-3 border-b border-[#29445f] bg-[#0b1e31] px-4 py-3 text-xs font-medium text-[#9eb2c5]"><span>Contact</span><span className="hidden sm:block">Source</span><span>Status</span><span /></div>{leads.map((lead) => <div key={lead.id} className="grid grid-cols-[minmax(0,1fr)_130px_150px_44px] items-center gap-3 border-b border-white/5 px-4 py-3 last:border-b-0"><div className="min-w-0"><p className="truncate text-sm font-medium text-white">{lead.contact}</p><p className="mt-1 text-xs text-[#8da3b8]">{new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(new Date(lead.created_at))}</p></div><p className="hidden truncate text-sm text-[#a9bccd] sm:block">{lead.source || "Pixel game"}</p><select value={lead.status || "new"} onChange={(event) => void updateLeadStatus(lead.id, event.target.value)} aria-label={`Status for ${lead.contact}`} className="rounded-lg border border-[#36516d] bg-[#081727] px-2.5 py-2 text-sm text-white outline-none focus:border-[#63adff]"><option value="new">New</option><option value="contacted">Contacted</option><option value="closed">Closed</option></select><button type="button" onClick={() => void deleteLead(lead.id)} className="rounded-lg p-2 text-red-200 hover:bg-red-400/10" aria-label={`Delete lead from ${lead.contact}`}><Trash2 size={16} /></button></div>)}</div>}</div>;
     if (active === "hero") return <div className="grid gap-5 md:grid-cols-2"><div className="md:col-span-2"><TextField label="Headline" value={editing.hero.title} onChange={(value) => updateObject("hero", "title", value)} /></div><div className="md:col-span-2"><TextField label="Animated words (one per line)" value={editing.hero.words.join("\n")} multiline onChange={(value) => updateObject("hero", "words", value.split("\n").map((word) => word.trim()).filter(Boolean))} /></div><div className="md:col-span-2"><TextField label="Subtitle" value={editing.hero.subtitle} multiline onChange={(value) => updateObject("hero", "subtitle", value)} /></div><ImageField label="Profile image" value={editing.hero.profileImage} token={token} onChange={(value) => updateObject("hero", "profileImage", value)} /><TextField label="CV link" value={editing.hero.cvLink} onChange={(value) => updateObject("hero", "cvLink", value)} /><TextField label="Primary CTA label" value={editing.hero.primaryCtaLabel} onChange={(value) => updateObject("hero", "primaryCtaLabel", value)} /><TextField label="Primary CTA link" value={editing.hero.primaryCtaLink} onChange={(value) => updateObject("hero", "primaryCtaLink", value)} /><TextField label="Secondary CTA label" value={editing.hero.secondaryCtaLabel} onChange={(value) => updateObject("hero", "secondaryCtaLabel", value)} /><TextField label="Secondary CTA link" value={editing.hero.secondaryCtaLink} onChange={(value) => updateObject("hero", "secondaryCtaLabel", value)} /></div>;
     if (active === "about") return <div className="grid gap-5 md:grid-cols-2"><ImageField label="Profile image" value={editing.about.profileImage} token={token} onChange={(value) => updateObject("about", "profileImage", value)} /><TextField label="Name" value={editing.about.name} onChange={(value) => updateObject("about", "name", value)} /><div className="md:col-span-2"><TextField label="Bio" value={editing.about.bio} multiline onChange={(value) => updateObject("about", "bio", value)} /></div>{(["behance", "linkedin", "whatsapp"] as const).map((key) => <TextField key={key} label={`${key[0].toUpperCase()}${key.slice(1)} URL`} value={editing.about.socialLinks[key]} onChange={(value) => setRoot("about", { ...editing.about, socialLinks: { ...editing.about.socialLinks, [key]: value } })} />)}</div>;
     if (active === "contact") return <div className="grid gap-5 md:grid-cols-2"><div className="md:col-span-2"><TextField label="Heading" value={editing.contact.heading} onChange={(value) => updateObject("contact", "heading", value)} /></div><div className="md:col-span-2"><TextField label="Description" value={editing.contact.description} multiline onChange={(value) => updateObject("contact", "description", value)} /></div>{(["email", "whatsAppNumber", "whatsAppLink", "linkedInUrl", "behanceUrl"] as const).map((key) => <TextField key={key} label={key.replace(/([A-Z])/g, " $1").replace(/^./, (letter) => letter.toUpperCase())} value={editing.contact[key]} onChange={(value) => updateObject("contact", key, value)} />)}</div>;
