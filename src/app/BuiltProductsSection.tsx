@@ -44,7 +44,7 @@ export default function BuiltProductsSection() {
   const { builtProducts: products } = usePortfolioContent();
 
   return (
-    <section id="built-products" className="mx-auto w-full max-w-[1042px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10 xl:px-0" aria-labelledby="built-products-title">
+    <section id="built-products" className="mx-auto w-full max-w-[900px] px-5 py-12 sm:px-8 sm:py-16 lg:px-10 xl:px-0" aria-labelledby="built-products-title">
       <div className="mx-auto max-w-2xl text-center">
         <span className="inline-flex rounded-full border border-[#78b4ff]/20 bg-[#0a70ae]/10 px-3 py-1.5 text-xs font-medium tracking-wide text-[#bfe1ff]">
           {isArabic ? "فكرة · تصميم · إطلاق" : "DESIGN · BUILD · LAUNCH"}
@@ -60,20 +60,20 @@ export default function BuiltProductsSection() {
       <div className="mt-8 grid grid-cols-1 gap-5 sm:mt-10 sm:grid-cols-2 sm:gap-6" data-reveal-stagger>
         {products.map((product, index) => (
           <article key={product.id} className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] p-3 shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition-colors duration-300 hover:border-[#6d9ee8]/40 sm:p-4">
-            <div className="relative aspect-square overflow-hidden rounded-xl bg-[#101b29]">
+            <div className="relative aspect-square overflow-hidden rounded-xl bg-[#101b29] sm:aspect-[6/5]">
               <ProductPreview image={product.coverImage} name={product.title} index={index} isArabic={isArabic} />
               {!product.coverImage && <span className="absolute bottom-3 left-3 rounded-full bg-[#102035]/85 px-3 py-1 text-xs text-white/90">{isArabic ? "معاينة مؤقتة" : "Preview placeholder"}</span>}
             </div>
-            <div className="flex flex-1 flex-col px-1 pb-1 pt-5">
+            <div className="flex flex-1 flex-col px-1 pb-1 pt-4">
               <div className="flex items-start justify-between gap-3">
                 <h3 className="text-xl font-semibold leading-snug text-white sm:text-2xl">{product.title}</h3>
                 <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-400/25 bg-emerald-400/5 px-2.5 py-1 text-xs text-emerald-300"><span className="size-1.5 rounded-full bg-emerald-400" />{isArabic ? "مباشر" : "Live"}</span>
               </div>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-[#b7c5d0] sm:text-base">{product.description}</p>
-              <div className="mt-5 flex flex-wrap gap-2 text-xs text-[#cdd6db] sm:text-sm">
+              <div className="mt-4 flex flex-wrap gap-2 text-xs text-[#cdd6db] sm:text-sm">
                 {product.tags.map((tag) => <span key={tag} className="rounded-md border border-[#c9dfff]/20 px-2.5 py-1.5">{tag}</span>)}
               </div>
-              <div className="mt-5 flex min-h-12 items-center justify-between gap-3 border-t border-white/10 pt-4">
+              <div className="mt-4 flex min-h-12 items-center justify-between gap-3 border-t border-white/10 pt-3">
                 <span className="text-xs text-[#aebbc4] sm:text-sm">{isArabic ? "فكرة ← تصميم ← إطلاق" : "Concept → Design → Launch"}</span>
                 <a href={product.link} target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-[#0a70ae] px-3 py-2 text-sm font-medium text-white transition-colors hover:bg-[#1488cc] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8bbff4]">{isArabic ? "عرض المشروع" : "View project"}<ArrowUpRight size={16} aria-hidden="true" /></a>
               </div>
