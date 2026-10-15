@@ -58,7 +58,7 @@ function Logo() {
   );
 }
 
-function Navtabs({ items, onLanguageToggle }: { items: Array<{ id: string; label: string; link: string }>; onLanguageToggle: () => void }) {
+function Navtabs({ items }: { items: Array<{ id: string; label: string; link: string }> }) {
   const resolveLink = (item: { id: string; link: string }) => {
     if (item.id === "resources") return "/resources";
     return item.link.startsWith("#") && window.location.pathname !== "/" ? `/${item.link}` : item.link || "#";
@@ -66,7 +66,7 @@ function Navtabs({ items, onLanguageToggle }: { items: Array<{ id: string; label
   return (
     <div className="content-stretch flex gap-[24px] h-[21px] items-center relative shrink-0" data-name="navtabs">
       {items.map((item, index) => (
-        <a className="content-stretch flex items-center justify-center relative shrink-0" data-name="navtab" href={resolveLink(item)} key={item.id} onClick={(event) => { if (item.id === "arabic") { event.preventDefault(); onLanguageToggle(); return; } captureNavigationEvent(item.id, item.label); }}>
+        <a className="content-stretch flex items-center justify-center relative shrink-0" data-name="navtab" href={resolveLink(item)} key={item.id} onClick={() => captureNavigationEvent(item.id, item.label)}>
           <p className={`[word-break:break-word] font-['IBM_Plex_Sans:Regular',sans-serif] ${index === 0 ? "font-bold text-[#0a70ae]" : "font-normal text-[#cdd6db]"} leading-[normal] relative shrink-0 text-[20px] whitespace-nowrap`} style={{ fontVariationSettings: '"wdth" 100' }}>
             {item.label}
           </p>
@@ -79,21 +79,22 @@ function Navtabs({ items, onLanguageToggle }: { items: Array<{ id: string; label
 export default function Header() {
   const [open, setOpen] = useState(false);
   const { navigation } = usePortfolioContent();
-  const { isArabic, toggleLanguage } = useLanguage();
+  const { isArabic } = useLanguage();
+  const visibleNavigation = navigation.filter((item) => item.id !== "arabic");
   const navigationWithServices = (() => {
-    if (navigation.some((item) => item.id === "services")) {
-      if (navigation.some((item) => item.id === "resources")) return navigation;
-      const contactIndex = navigation.findIndex((item) => item.id === "contact");
+    if (visibleNavigation.some((item) => item.id === "services")) {
+      if (visibleNavigation.some((item) => item.id === "resources")) return visibleNavigation;
+      const contactIndex = visibleNavigation.findIndex((item) => item.id === "contact");
       const resourcesItem = { id: "resources", label: isArabic ? "الموارد" : "Resources", link: "#resources" };
       return contactIndex === -1
-        ? [...navigation, resourcesItem]
-        : [...navigation.slice(0, contactIndex), resourcesItem, ...navigation.slice(contactIndex)];
+        ? [...visibleNavigation, resourcesItem]
+        : [...visibleNavigation.slice(0, contactIndex), resourcesItem, ...visibleNavigation.slice(contactIndex)];
     }
     const servicesItem = { id: "services", label: isArabic ? "الخدمات" : "Services", link: "#services" };
-    const contactIndex = navigation.findIndex((item) => item.id === "contact");
+    const contactIndex = visibleNavigation.findIndex((item) => item.id === "contact");
     return contactIndex === -1
-      ? [...navigation, servicesItem]
-      : [...navigation.slice(0, contactIndex), servicesItem, ...navigation.slice(contactIndex)];
+      ? [...visibleNavigation, servicesItem]
+      : [...visibleNavigation.slice(0, contactIndex), servicesItem, ...visibleNavigation.slice(contactIndex)];
   })();
   const navigationWithSections = (() => {
     if (navigationWithServices.some((item) => item.id === "resources")) return navigationWithServices;
@@ -113,7 +114,7 @@ export default function Header() {
       <div className="bg-[rgba(255,255,255,0)] flex items-center justify-between px-4 sm:px-12 md:px-[200px] py-[16px] w-full">
         <Logo />
         <div className="hidden lg:block">
-          <Navtabs items={navigationWithSections} onLanguageToggle={toggleLanguage} />
+          <Navtabs items={navigationWithSections} />
         </div>
         <button
           className="lg:hidden text-white p-2"
@@ -152,7 +153,7 @@ export default function Header() {
               className={`text-left px-6 py-4 text-[18px] font-['IBM_Plex_Sans',sans-serif] border-b border-white/10 last:border-0 transition-colors ${
                 i === 0 ? "text-[#0a70ae] font-bold" : "text-[#cdd6db] font-normal"
               }`}
-              onClick={(event) => { if (item.id === "arabic") { event.preventDefault(); toggleLanguage(); } else { captureNavigationEvent(item.id, item.label); } setOpen(false); }}
+              onClick={() => { captureNavigationEvent(item.id, item.label); setOpen(false); }}
             >
               {item.label}
             </a>

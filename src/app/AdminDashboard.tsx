@@ -9,13 +9,13 @@ import { mergePortfolioContent, type PortfolioContent, type PortfolioContentBase
 import { supabase } from "../lib/supabase";
 import { localizeContent, type SiteLanguage } from "./LanguageProvider";
 
-type SectionKey = "hero" | "navigation" | "projects" | "about" | "experience" | "certifications" | "education" | "skills" | "languages" | "resources" | "leads" | "contact" | "footer";
+type SectionKey = "hero" | "navigation" | "projects" | "builtProducts" | "about" | "experience" | "certifications" | "education" | "skills" | "languages" | "resources" | "leads" | "contact" | "footer";
 type Field = { key: string; label: string; type?: "text" | "textarea" | "image" | "file" | "list" };
 type Item = Record<string, unknown> & { id: string };
 type ConsultationLead = { id: string; contact: string; source: string | null; status: string | null; created_at: string };
 
 const sections: Array<{ key: SectionKey; label: string }> = [
-  { key: "hero", label: "Hero" }, { key: "navigation", label: "Navigation" }, { key: "projects", label: "Projects" },
+  { key: "hero", label: "Hero" }, { key: "navigation", label: "Navigation" }, { key: "projects", label: "Projects" }, { key: "builtProducts", label: "Built products" },
   { key: "about", label: "About" }, { key: "experience", label: "Experience" }, { key: "certifications", label: "Licences & certifications" },
   { key: "education", label: "Education" }, { key: "skills", label: "Skills" }, { key: "languages", label: "Languages" },
   { key: "resources", label: "Resources" },
@@ -26,6 +26,7 @@ const sections: Array<{ key: SectionKey; label: string }> = [
 const collectionFields: Record<string, Field[]> = {
   navigation: [{ key: "label", label: "Menu label" }, { key: "link", label: "Destination link" }],
   projects: [{ key: "title", label: "Project title" }, { key: "coverImage", label: "Cover image", type: "image" }, { key: "galleryImages", label: "Gallery images (one URL per line)", type: "list" }, { key: "description", label: "Description", type: "textarea" }, { key: "tags", label: "Tags (one per line)", type: "list" }, { key: "year", label: "Year" }, { key: "category", label: "Category" }, { key: "link", label: "Project link" }],
+  builtProducts: [{ key: "title", label: "Product name" }, { key: "coverImage", label: "Card image (square)", type: "image" }, { key: "description", label: "Description", type: "textarea" }, { key: "tags", label: "Tags (one per line)", type: "list" }, { key: "link", label: "Project link" }],
   experience: [{ key: "logo", label: "Company logo", type: "image" }, { key: "jobTitle", label: "Job title" }, { key: "company", label: "Company" }, { key: "dates", label: "Dates" }, { key: "employmentType", label: "Employment type" }, { key: "location", label: "Location" }, { key: "bulletPoints", label: "Bullet points (one per line)", type: "list" }],
   certifications: [{ key: "logo", label: "Certification logo", type: "image" }, { key: "title", label: "Title" }, { key: "issuer", label: "Issuer" }, { key: "credentialUrl", label: "Credential URL" }],
   education: [{ key: "logo", label: "Institution logo", type: "image" }, { key: "degree", label: "Degree" }, { key: "institutionName", label: "Institution name" }],
@@ -37,6 +38,7 @@ const collectionFields: Record<string, Field[]> = {
 const emptyItems: Record<string, Omit<Item, "id">> = {
   navigation: { label: "New link", link: "#" },
   projects: { title: "New project", coverImage: "", galleryImages: [], description: "", tags: [], year: "", category: "", link: "#" },
+  builtProducts: { title: "New product", coverImage: "", description: "", tags: [], link: "" },
   experience: { logo: "", jobTitle: "New role", company: "", dates: "", employmentType: "", location: "", bulletPoints: [] },
   certifications: { logo: "", title: "New certification", issuer: "", credentialUrl: "" },
   education: { logo: "", degree: "", institutionName: "" },
@@ -54,10 +56,11 @@ function cleanContentForSave(content: PortfolioContent): PortfolioContent {
     ...base,
     hero: { ...base.hero, words: cleanList(base.hero.words) },
     projects: base.projects.map((project) => ({ ...project, galleryImages: cleanList(project.galleryImages), tags: cleanList(project.tags) })),
+    builtProducts: base.builtProducts.map((product) => ({ ...product, tags: cleanList(product.tags) })),
     experience: base.experience.map((item) => ({ ...item, bulletPoints: cleanList(item.bulletPoints) })),
   });
   const cleaned = cleanBase(content);
-  return { ...cleaned, ...(content.arabic ? { arabic: cleanBase(content.arabic) } : {}) };
+  return { ...cleaned, ...(content.arabic ? { arabic: cleanBase(mergePortfolioContent(content.arabic)) } : {}) };
 }
 
 function FieldLabel({ children }: { children: string }) {

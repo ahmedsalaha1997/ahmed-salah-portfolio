@@ -4,6 +4,7 @@ export type PortfolioContentBase = {
   hero: { title: string; words: string[]; subtitle: string; profileImage: string; cvLink: string; primaryCtaLabel: string; primaryCtaLink: string; secondaryCtaLabel: string; secondaryCtaLink: string };
   navigation: Array<{ id: string; label: string; link: string }>;
   projects: Array<{ id: string; title: string; coverImage: string; galleryImages: string[]; description: string; tags: string[]; year: string; category: string; link: string }>;
+  builtProducts: Array<{ id: string; title: string; coverImage: string; description: string; tags: string[]; link: string }>;
   about: { profileImage: string; name: string; bio: string; socialLinks: { behance: string; linkedin: string; whatsapp: string } };
   experience: Array<{ id: string; logo: string; jobTitle: string; company: string; dates: string; employmentType: string; location: string; bulletPoints: string[] }>;
   certifications: Array<{ id: string; logo: string; title: string; issuer: string; credentialUrl: string }>;
@@ -55,9 +56,13 @@ export const defaultPortfolioContent: PortfolioContent = {
     profileImage: "", cvLink: "#", primaryCtaLabel: "Ahmed's CV", primaryCtaLink: "#", secondaryCtaLabel: "See work", secondaryCtaLink: "#projects",
   },
   navigation: [
-    { id: "home", label: "Home", link: "#home" }, { id: "projects", label: "Projects", link: "#projects" }, { id: "about", label: "About", link: "#about" }, { id: "services", label: "Services", link: "#services" }, { id: "resources", label: "Resources", link: "/resources" }, { id: "contact", label: "Contact", link: "#contact" }, { id: "arabic", label: "Arabic", link: "#" },
+    { id: "home", label: "Home", link: "#home" }, { id: "projects", label: "Projects", link: "#projects" }, { id: "about", label: "About", link: "#about" }, { id: "services", label: "Services", link: "#services" }, { id: "resources", label: "Resources", link: "/resources" }, { id: "contact", label: "Contact", link: "#contact" },
   ],
   projects: [],
+  builtProducts: [
+    { id: "usol", title: "Usol", coverImage: "/usol-product-card.png", description: "A personal finance platform that brings assets, liabilities, income, and expenses together for a clear view of net worth.", tags: ["B2C", "SaaS Product", "Vibe Coded"], link: "https://landing.usol.work/" },
+    { id: "legus", title: "Legus", coverImage: "/legus-product-card.png", description: "A legal practice platform that brings cases, court dates, clients, and finances into one place.", tags: ["Product design", "AI-assisted build"], link: "https://landing.mylocal.ws/" },
+  ],
   about: { profileImage: "", name: "Ahmed Salah", bio: "Senior Product Designer (UI UX) with 4+ years of experience designing SaaS platforms across FinTech, LegalTech, and Property Management. Experienced in leading end-to-end product design from discovery and UX research to scalable design systems, prototypes, and developer handoff.", socialLinks: { behance: "https://www.behance.net/ahmedsalaha1997", linkedin: "https://www.linkedin.com/in/ahmedsalah1997/", whatsapp: "https://wa.me/201015949764" } },
   experience: websiteContentBaseline.experience, certifications: websiteContentBaseline.certifications, education: websiteContentBaseline.education, skills: websiteContentBaseline.skills,
   languages: [{ id: "arabic", name: "Arabic", proficiency: "Native or bilingual proficiency" }, { id: "english", name: "English", proficiency: "Professional working proficiency" }],
@@ -90,6 +95,7 @@ export function mergePortfolioContent(value: Partial<PortfolioContent>): Portfol
     about: { ...defaultPortfolioContent.about, ...value.about, socialLinks: { ...defaultPortfolioContent.about.socialLinks, ...value.about?.socialLinks } },
     contact: { ...defaultPortfolioContent.contact, ...value.contact },
     footer: { ...defaultPortfolioContent.footer, ...value.footer },
+    builtProducts: value.builtProducts ?? defaultPortfolioContent.builtProducts,
     experience: useBaseline(value.experience, websiteContentBaseline.experience),
     certifications: useBaseline(value.certifications, websiteContentBaseline.certifications),
     education: useBaseline(value.education, websiteContentBaseline.education),

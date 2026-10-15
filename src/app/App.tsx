@@ -10,6 +10,7 @@ import ScrollReveal from "./ScrollReveal";
 import SpaceshipCursor from "./SpaceshipCursor";
 import { useLanguage } from "./LanguageProvider";
 import ServicesSection from "./ServicesSection";
+import BuiltProductsSection from "./BuiltProductsSection";
 
 export default function App() {
   const { isArabic } = useLanguage();
@@ -35,6 +36,10 @@ export default function App() {
 
         <ScrollReveal className="w-full [&_[data-name='work']]:h-auto [&_[data-name='projects']]:justify-center [&_[data-name='card']_[aria-hidden]]:hidden">
         <Work />
+        </ScrollReveal>
+
+        <ScrollReveal className="w-full">
+        <BuiltProductsSection />
         </ScrollReveal>
 
         <ScrollReveal className="w-full">

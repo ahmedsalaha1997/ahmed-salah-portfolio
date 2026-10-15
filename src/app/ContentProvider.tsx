@@ -28,7 +28,7 @@ export function ContentProvider({ children }: { children: ReactNode }) {
     document.addEventListener("visibilitychange", refreshWhenVisible);
 
     const channel = supabase
-      ?.channel("portfolio-content-public-sync")
+      ?.channel(`portfolio-content-public-sync-${crypto.randomUUID()}`)
       .on(
         "postgres_changes",
         { event: "UPDATE", schema: "public", table: "portfolio_content", filter: "id=eq.primary" },

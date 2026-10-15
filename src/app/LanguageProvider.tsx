@@ -47,10 +47,21 @@ const arabicText: Record<string, string> = {
   "Designed visual identities and marketing assets for digital and print platforms.": "صممت هويات بصرية وأصولًا تسويقية للمنصات الرقمية والمطبوعة.", "Developed strong foundations in typography, visual hierarchy, and brand consistency.": "طورت أساسًا قويًا في الطباعة والتسلسل الهرمي البصري واتساق العلامة التجارية.",
 };
 
+const builtProductsArabicText: Record<string, string> = {
+  "Usol": "أصول",
+  "Legus": "ليجوس",
+  "A personal finance platform that brings assets, liabilities, income, and expenses together for a clear view of net worth.": "منصة للمال الشخصي تجمع الأصول والالتزامات والدخل والمصروفات لتعرض صافي ثروتك بوضوح.",
+  "A legal practice platform that brings cases, court dates, clients, and finances into one place.": "منصة لإدارة المكاتب القانونية تجمع القضايا والجلسات والعملاء والحسابات في مكان واحد.",
+  "SaaS Product": "منتج SaaS",
+  "Vibe Coded": "فايب كودينج",
+  "Product design": "تصميم المنتج",
+  "AI-assisted build": "تطوير بمساعدة الذكاء الاصطناعي",
+};
+
 export function translateText(value: string, language: SiteLanguage) {
   if (language !== "ar") return value;
   const normalized = value.replace(/\s+/g, " ").trim();
-  return resourceArabicText[normalized] ?? resourceArabicText[value] ?? arabicText[normalized] ?? arabicText[value] ?? value;
+  return builtProductsArabicText[normalized] ?? builtProductsArabicText[value] ?? resourceArabicText[normalized] ?? resourceArabicText[value] ?? arabicText[normalized] ?? arabicText[value] ?? value;
 }
 
 export function localizeContent(content: PortfolioContent, language: SiteLanguage): PortfolioContent {
@@ -61,6 +72,7 @@ export function localizeContent(content: PortfolioContent, language: SiteLanguag
     hero: { ...content.hero, title: translate(content.hero.title), words: content.hero.words.map(translate), subtitle: translate(content.hero.subtitle), primaryCtaLabel: translate(content.hero.primaryCtaLabel), secondaryCtaLabel: translate(content.hero.secondaryCtaLabel) },
     navigation: content.navigation.map((item) => ({ ...item, label: item.id === "arabic" ? "English" : translate(item.label) })),
     projects: content.projects.map((project) => ({ ...project, title: translate(project.title), description: translate(project.description), category: translate(project.category), tags: project.tags.map(translate) })),
+    builtProducts: content.builtProducts.map((product) => ({ ...product, title: translate(product.title), description: translate(product.description), tags: product.tags.map(translate) })),
     about: { ...content.about, bio: translate(content.about.bio) },
     experience: content.experience.map((item) => ({ ...item, jobTitle: translate(item.jobTitle), dates: translate(item.dates), employmentType: translate(item.employmentType), location: translate(item.location), bulletPoints: item.bulletPoints.map(translate) })),
     certifications: content.certifications.map((item) => ({ ...item, title: translate(item.title), issuer: translate(item.issuer) })),
@@ -74,7 +86,7 @@ export function localizeContent(content: PortfolioContent, language: SiteLanguag
 }
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<SiteLanguage>(() => localStorage.getItem("portfolio-language") === "ar" ? "ar" : "en");
+  const [language, setLanguage] = useState<SiteLanguage>("en");
   const isArabic = language === "ar";
 
   useEffect(() => {
