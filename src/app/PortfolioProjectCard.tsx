@@ -5,6 +5,7 @@ export type PortfolioCardProject = {
   tags: string[];
   images: string[];
   link?: string;
+  description?: string;
 };
 
 function ProjectImage({ images, title }: Pick<PortfolioCardProject, "images" | "title">) {
@@ -40,16 +41,22 @@ export default function PortfolioProjectCard({ project }: { project: PortfolioCa
   const localizedProject = {
     ...project,
     title: translateText(project.title, language),
+    description: project.description ? translateText(project.description, language) : undefined,
     tags: project.tags.map((tag) => translateText(tag, language)),
   };
   const card = (
-    <article className="group flex min-w-0 flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-3 shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#6d9ee8]/50 hover:bg-white/[0.09] sm:p-4">
+    <article className={`group flex min-w-0 flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.06] p-3 shadow-[0_12px_32px_rgba(0,0,0,0.12)] transition duration-300 hover:-translate-y-1 hover:border-[#6d9ee8]/50 hover:bg-white/[0.09] sm:p-4 ${localizedProject.description ? "h-full" : ""}`}>
       <ProjectImage {...localizedProject} />
-      <div className="flex flex-1 flex-col gap-4 px-1 pb-1 sm:gap-5">
-        <h3 className="min-h-[3.5rem] font-['IBM_Plex_Sans',sans-serif] text-xl font-semibold leading-snug text-white sm:min-h-[4.25rem] sm:text-2xl">
+      <div className="flex flex-1 flex-col gap-3 px-1 pb-1 sm:gap-4">
+        <h3 className={`font-['IBM_Plex_Sans',sans-serif] text-xl font-semibold leading-snug text-white sm:text-2xl ${localizedProject.description ? "" : "min-h-[3.5rem] sm:min-h-[4.25rem]"}`}>
           {localizedProject.title}
         </h3>
-        <div className="flex flex-wrap gap-2">
+        {localizedProject.description ? (
+          <p className="font-['IBM_Plex_Sans',sans-serif] text-sm leading-relaxed text-[#b7c5d0] sm:text-base">
+            {localizedProject.description}
+          </p>
+        ) : null}
+        <div className={`flex flex-wrap gap-2 ${localizedProject.description ? "mt-auto pt-2" : ""}`}>
           {localizedProject.tags.map((tag) => (
             <span
               className="rounded-md border border-[#c9dfff]/20 px-2.5 py-1.5 font-['IBM_Plex_Sans',sans-serif] text-xs leading-none text-[#cdd6db] sm:px-3 sm:text-sm"

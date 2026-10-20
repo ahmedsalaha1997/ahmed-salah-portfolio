@@ -26,6 +26,7 @@ export default function BuiltProductsSection() {
             key={product.id}
             project={{
               title: product.title,
+              description: product.description,
               tags: product.tags,
               images: product.coverImage ? [product.coverImage] : [],
               link: product.link,
